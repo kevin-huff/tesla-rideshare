@@ -1,0 +1,210 @@
+<!doctype html>
+<!--
+  ──────────────────────────────────────────────────────────────────
+  hello, view-source friend.
+
+  this is the QR-code landing page for kevin's tesla rideshare hustle.
+  if you're reading the markup, you're exactly the kind of person
+  he wants to work with → kevin@kevnet.cloud
+
+  ──────────────────────────────────────────────────────────────────
+  build: astro · cloudflare pages · cloudflare web analytics
+  no third-party scripts. no cookies. no banner. no autoplay.
+  ──────────────────────────────────────────────────────────────────
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ride.kevnet.cloud — design</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%237dd3fc'/%3E%3C/svg%3E"/>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: #f0eee9; overflow: hidden; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+    .phone-scroll { scrollbar-width: none; }
+    .phone-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="design-canvas.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="phone-frame.jsx"></script>
+  <script type="text/babel" src="photo-placeholder.jsx"></script>
+  <script type="text/babel" src="variant-refined.jsx"></script>
+  <script type="text/babel" src="variant-terminal.jsx"></script>
+  <script type="text/babel" src="variant-garage.jsx"></script>
+
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "accent": "#c084fc",
+      "refinedFont": "system",
+      "showAllVariants": false,
+      "density": "regular",
+      "headlightsOn": false,
+      "devMode": false
+    }/*EDITMODE-END*/;
+
+    function App() {
+      const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+      // ── Easter eggs ──────────────────────────────────────────────
+      // 1. devtools greeting
+      React.useEffect(() => {
+        const styles = [
+          'background:#0b0b0d;color:#7dd3fc;font:600 14px ui-monospace,monospace;padding:8px 12px;border-radius:4px',
+          'background:#0b0b0d;color:#d6d4ce;font:13px ui-monospace,monospace;padding:4px 12px',
+        ];
+        console.log('%chey 👋', styles[0]);
+        console.log("%cyou're the kind of person i want to work with.\nkevin@kevnet.cloud", styles[1]);
+        console.log('%csource: https://github.com/kevnet/ride.kevnet.cloud', styles[1]);
+      }, []);
+
+      // 2. konami code → dev mode (exposes Astro component names)
+      React.useEffect(() => {
+        const seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+        let i = 0;
+        const onKey = (e) => {
+          if (e.key.toLowerCase() === seq[i].toLowerCase()) {
+            i++;
+            if (i === seq.length) { setTweak('devMode', !t.devMode); i = 0; }
+          } else { i = 0; }
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+      }, [t.devMode, setTweak]);
+
+      // dev mode marker — applied to all variants via a class wrapper
+      const devOverlay = t.devMode ? (
+        <div style={{
+          position: 'fixed', top: 8, left: 8, zIndex: 999,
+          background: '#7dd3fc', color: '#000', padding: '4px 10px',
+          fontSize: 11, fontFamily: 'ui-monospace,monospace', fontWeight: 600,
+          letterSpacing: 0.5, textTransform: 'uppercase',
+        }}>dev mode · astro components visible</div>
+      ) : null;
+
+      return (
+        <>
+          {devOverlay}
+
+          <DesignCanvas>
+            <DCSection id="primary" title="ride.kevnet.cloud" subtitle="Mobile · 390×844 · single page · QR-code landing">
+              <DCArtboard id="refined" label="01 · Refined Dark — primary direction" width={390} height={844}>
+                <PhoneFrame statusBarColor="#0b0b0d" statusBarFg="#fff" bg="#0b0b0d">
+                  <VariantRefined accent={t.accent} font={t.refinedFont}/>
+                </PhoneFrame>
+              </DCArtboard>
+
+              {t.showAllVariants && (
+                <DCArtboard id="terminal" label="02 · Terminal — personality dial cranked" width={390} height={844}>
+                  <PhoneFrame statusBarColor="#0d0e0f" statusBarFg="#d6d4ce" bg="#0d0e0f">
+                    <VariantTerminal accent={t.accent}/>
+                  </PhoneFrame>
+                </DCArtboard>
+              )}
+
+              {t.showAllVariants && (
+                <DCArtboard id="garage" label="03 · Garage — editorial / object-forward" width={390} height={844}>
+                  <PhoneFrame statusBarColor="#f4f1ea" statusBarFg="#14130f" bg="#f4f1ea">
+                    <VariantGarage accent={t.accent}/>
+                  </PhoneFrame>
+                </DCArtboard>
+              )}
+            </DCSection>
+
+            <DCSection id="notes" title="Notes for Kevin" subtitle="What's intentional, what's TBD, what to push back on">
+              <DCArtboard id="thinking" label="Designer notes" width={520} height={844}>
+                <div style={{ padding: '32px 30px', fontFamily: 'ui-monospace, "SF Mono", Menlo, monospace', fontSize: 12.5, lineHeight: 1.6, color: '#1a1a1a', height: '100%', overflow: 'auto', background: '#fbf9f3', boxSizing: 'border-box' }}>
+                  <div style={{ marginBottom: 14, color: '#7c7466' }}># SCOPE</div>
+                  <p style={{ margin: '0 0 18px' }}>
+                    Three mobile variants. Same copy and structure. They're knobs on the same dial: how loud is "this is Kevin's site"?
+                  </p>
+
+                  <div style={{ marginBottom: 14, color: '#7c7466' }}># THE THREE</div>
+                  <p style={{ margin: '0 0 6px' }}>
+                    <strong>01 · Refined Dark</strong> — Linear / Brittany Chiang lane. Confident, sparse mono metadata, generous whitespace. Default recommendation. Reads as "competent person who shipped this himself."
+                  </p>
+                  <p style={{ margin: '0 0 6px' }}>
+                    <strong>02 · Terminal</strong> — personality at 8/10. Hero is a fake terminal session, sections are <span style={{ color: '#666' }}># comments</span>, FAQ is <span style={{ color: '#666' }}>man passenger-faq</span>. Filters HARD on tech-curious passengers. Risk: the non-technical 80% might just bounce.
+                  </p>
+                  <p style={{ margin: '0 0 18px' }}>
+                    <strong>03 · Garage</strong> — editorial / serif display, the car as object. Reads as a magazine feature. Most "polished" of the three. Risk: borders on too-perfect → could read agency-built, which Kevin explicitly does not want.
+                  </p>
+
+                  <div style={{ marginBottom: 14, color: '#7c7466' }}># EASTER EGGS</div>
+                  <p style={{ margin: '0 0 6px' }}>· devtools greeting (open console)</p>
+                  <p style={{ margin: '0 0 6px' }}>· konami code → dev mode (↑↑↓↓←→←→ B A)</p>
+                  <p style={{ margin: '0 0 6px' }}>· top-of-source HTML comment</p>
+                  <p style={{ margin: '0 0 6px' }}>· live "● streaming" dot in V1 nav (when API hooked up)</p>
+                  <p style={{ margin: '0 0 18px' }}>· /humans.txt and /.well-known/whoami at deploy time</p>
+
+                  <div style={{ marginBottom: 14, color: '#7c7466' }}># CONFIRMED / OFF-LIMITS</div>
+                  <p style={{ margin: '0 0 6px' }}>✗ no autoplaying anything</p>
+                  <p style={{ margin: '0 0 6px' }}>✗ no "Hi, I'm Kevin 👋"</p>
+                  <p style={{ margin: '0 0 6px' }}>✗ no animated gradient hero text</p>
+                  <p style={{ margin: '0 0 6px' }}>✗ no testimonials, skill bars, modals</p>
+                  <p style={{ margin: '0 0 6px' }}>✗ no dark mode toggle (commit to one)</p>
+                  <p style={{ margin: '0 0 6px' }}>✗ no em dashes or semicolons in body copy</p>
+                  <p style={{ margin: '0 0 18px' }}>✗ no Vercel / Apple / Tesla.com pastiche</p>
+
+                  <div style={{ marginBottom: 14, color: '#7c7466' }}># CONTENT KEVIN STILL OWES</div>
+                  <p style={{ margin: '0 0 6px' }}>[ ] hero photo (Kevin + Y, landscape)</p>
+                  <p style={{ margin: '0 0 6px' }}>[ ] headshot</p>
+                  <p style={{ margin: '0 0 6px' }}>[ ] interior + exterior + screen shots</p>
+                  <p style={{ margin: '0 0 6px' }}>[ ] 3-5 sentence bio in his voice</p>
+                  <p style={{ margin: '0 0 6px' }}>[ ] tagline (placeholder is mine, swap freely)</p>
+                  <p style={{ margin: '0 0 6px' }}>[ ] FAQ answers in his words</p>
+                  <p style={{ margin: '0 0 6px' }}>[ ] tesla referral URL</p>
+                  <p style={{ margin: '0 0 6px' }}>[ ] twitch channel art + 2 clip URLs</p>
+                  <p style={{ margin: '0 0 6px' }}>[ ] 3 service-bucket blurbs</p>
+                  <p style={{ margin: '0 0 18px' }}>[ ] confirm accent color (currently sky blue)</p>
+
+                  <div style={{ marginBottom: 14, color: '#7c7466' }}># TWEAKS PANEL</div>
+                  <p style={{ margin: 0 }}>
+                    bottom-right · toggle accent color, V1 type pairing, hide secondary variants, density. Live preview.
+                  </p>
+                </div>
+              </DCArtboard>
+            </DCSection>
+          </DesignCanvas>
+
+          <TweaksPanel title="Tweaks">
+            <TweakSection label="Palette"/>
+            <TweakColor label="Accent" value={t.accent} onChange={(v) => setTweak('accent', v)}/>
+            <div style={{ display: 'flex', gap: 6, marginTop: -2 }}>
+              {['#7dd3fc','#a3e635','#fb923c','#c084fc','#fbbf24','#f87171'].map((c) => (
+                <button key={c} onClick={() => setTweak('accent', c)}
+                  style={{
+                    width: 22, height: 22, borderRadius: 4, border: t.accent === c ? '2px solid #29261b' : '0.5px solid rgba(0,0,0,0.15)',
+                    background: c, cursor: 'pointer', padding: 0, flexShrink: 0,
+                  }}/>
+              ))}
+            </div>
+
+            <TweakSection label="V1 · Refined"/>
+            <TweakRadio label="Type pairing" value={t.refinedFont}
+              options={[{value:'system',label:'sans'},{value:'mono',label:'mono'},{value:'serif',label:'serif'}]}
+              onChange={(v) => setTweak('refinedFont', v)}/>
+
+            <TweakSection label="Canvas"/>
+            <TweakToggle label="Show all 3 variants" value={t.showAllVariants}
+              onChange={(v) => setTweak('showAllVariants', v)}/>
+
+            <TweakSection label="Easter eggs"/>
+            <TweakToggle label="Dev mode (Konami: ↑↑↓↓←→←→BA)" value={t.devMode}
+              onChange={(v) => setTweak('devMode', v)}/>
+          </TweaksPanel>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>
