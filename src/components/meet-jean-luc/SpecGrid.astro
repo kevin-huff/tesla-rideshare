@@ -1,0 +1,55 @@
+---
+import MonoLabel from "../atoms/MonoLabel.astro";
+
+const specs: Array<[string, string]> = [
+  ["range", "~330 mi"],
+  ["0–60", "4.8 sec"],
+  ["the screen", "15.4 in"],
+  ["driver mode", "engage"],
+];
+
+// "0–60" is en dash (U+2013), per CLAUDE.md no-em-dash rule;
+// en dashes are the typographically correct mark for numeric ranges.
+// The "engage" value in the fourth cell is the whole joke — do not change.
+---
+
+<dl class="spec-grid">
+  {
+    specs.map(([k, v]) => (
+      <div class="cell">
+        <dt>
+          <MonoLabel>{k}</MonoLabel>
+        </dt>
+        <dd class="value">{v}</dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .spec-grid {
+    margin: 22px 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+
+  .cell {
+    padding: 14px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  dt {
+    margin-bottom: 6px;
+  }
+
+  .value {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+  }
+</style>

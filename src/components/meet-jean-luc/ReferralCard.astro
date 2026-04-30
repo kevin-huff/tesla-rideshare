@@ -1,0 +1,45 @@
+---
+import MonoLabel from "../atoms/MonoLabel.astro";
+import UnderlinedLink from "../atoms/UnderlinedLink.astro";
+
+type Props = {
+  href?: string;
+  label?: string;
+};
+
+const { href = "#", label = "tesla.com/referral/kevin" }: Props = Astro.props;
+---
+
+<aside class="referral">
+  <div class="kicker">
+    <MonoLabel accent>referral · honest pitch</MonoLabel>
+  </div>
+  <p>
+    Buying one? My referral link gets you a small perk and gets me a small one
+    too. No pressure.
+  </p>
+  <UnderlinedLink href={href} external accent trackId="tesla-referral">
+    {label}
+  </UnderlinedLink>
+</aside>
+
+<style>
+  .referral {
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+
+  .kicker {
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin: 0 0 12px;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--fg);
+  }
+</style>

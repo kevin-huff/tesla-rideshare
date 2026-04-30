@@ -1,0 +1,121 @@
+---
+import MonoLabel from "../atoms/MonoLabel.astro";
+
+type Item = { q: string; a: string };
+
+type Props = {
+  items?: Item[];
+  label?: string;
+};
+
+const defaultItems: Item[] = [
+  {
+    q: "How much was it?",
+    a: "More than a Camry, less than a house. The math gets better with gas savings.",
+  },
+  {
+    q: "Does it really drive itself?",
+    a: "Autopilot keeps lane and speed. I am still the one driving. Always.",
+  },
+  {
+    q: "What happens if it runs out?",
+    a: "Same as gas. You plan ahead. There's a charger 6 minutes from here.",
+  },
+  {
+    q: "Cold weather?",
+    a: "Range drops maybe 20%. Heated seats are worth it.",
+  },
+  {
+    q: 'Why "Jean-Luc"?',
+    a: "He earned it. The plate said it first and the name stuck.",
+  },
+];
+
+const { items = defaultItems, label = "questions passengers ask" }: Props =
+  Astro.props;
+---
+
+<div class="faq">
+  <div class="label">
+    <MonoLabel>{label}</MonoLabel>
+  </div>
+
+  {
+    items.map((item) => (
+      <details>
+        <summary>
+          <span class="q">{item.q}</span>
+          <span class="plus" aria-hidden="true">
+            +
+          </span>
+        </summary>
+        <p class="a">{item.a}</p>
+      </details>
+    ))
+  }
+  <div class="closer"></div>
+</div>
+
+<style>
+  .faq {
+    margin-top: 28px;
+  }
+
+  .label {
+    margin-bottom: 12px;
+  }
+
+  details {
+    border-top: 1px solid var(--line);
+    padding: 14px 0;
+  }
+
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .q {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  .plus {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--accent);
+    font-size: 18px;
+    line-height: 1;
+    display: inline-block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .plus {
+      transition: transform 0.18s ease;
+    }
+  }
+
+  details[open] .plus {
+    transform: rotate(45deg);
+  }
+
+  .a {
+    margin: 10px 0 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--fg-dim);
+  }
+
+  .closer {
+    border-top: 1px solid var(--line);
+  }
+</style>
