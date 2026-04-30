@@ -1,0 +1,67 @@
+---
+import MonoLabel from "./atoms/MonoLabel.astro";
+---
+
+<section class="hero">
+  <div class="kicker">
+    <MonoLabel>· hello from the back seat</MonoLabel>
+  </div>
+
+  <h1>
+    Kevin.<br />
+    And his<br />
+    <span class="accent">Model&nbsp;Y</span>.
+  </h1>
+
+  <p class="lead">
+    Tech guy who drives a Tesla in Springfield, MO. Streams on Twitch as
+    <span class="bright">The Kevin Show</span>. Builds things in Drupal when
+    nobody is looking.
+  </p>
+
+  <div class="photo">
+    <slot name="photo" />
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: 6px 22px 28px;
+    max-width: var(--max-content);
+    margin: 0 auto;
+  }
+
+  .kicker {
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    margin: 0 0 18px;
+    font-size: 46px;
+    line-height: 0.96;
+    font-weight: 600;
+    letter-spacing: -0.038em;
+    color: var(--fg);
+    text-wrap: balance;
+  }
+
+  h1 .accent {
+    color: var(--accent);
+  }
+
+  .lead {
+    margin: 0 0 22px;
+    max-width: 320px;
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--fg-dim);
+  }
+
+  .lead .bright {
+    color: var(--fg);
+  }
+
+  .photo {
+    margin: 0;
+  }
+</style>

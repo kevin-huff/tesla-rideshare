@@ -1,0 +1,55 @@
+---
+import LiveDot from "./atoms/LiveDot.astro";
+
+type Props = {
+  live?: boolean;
+  pulse?: boolean;
+};
+
+const { live = false, pulse = false }: Props = Astro.props;
+---
+
+<header>
+  <span class="brand">kevnet.cloud / ride</span>
+  {
+    live && (
+      <span class="indicator">
+        <span class="live-label">live</span>
+        <LiveDot pulse={pulse} />
+      </span>
+    )
+  }
+</header>
+
+<style>
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 22px 10px;
+    max-width: var(--max-content);
+    margin: 0 auto;
+  }
+
+  .brand {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-mute);
+  }
+
+  .indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .live-label {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-mute);
+  }
+</style>
