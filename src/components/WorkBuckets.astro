@@ -1,0 +1,94 @@
+---
+import MonoLabel from "./atoms/MonoLabel.astro";
+import EmailCTA from "./EmailCTA.astro";
+
+const buckets = [
+  {
+    title: "Web & Drupal",
+    body: "Architecture, migrations, modules. The kind of fixes that pay for themselves in a quarter.",
+  },
+  {
+    title: "AI strategy & tooling",
+    body: "Where to apply it, where not to. Claude in production. Internal tools that actually get used.",
+  },
+  {
+    title: "Fractional tech help",
+    body: "A few hours a month for teams that need a senior brain on call without a full hire.",
+  },
+];
+---
+
+<div class="work-buckets">
+  <p class="lead">
+    Mostly here so the right person knows it's an option. Director of Technology
+    day job, federal contracting, security clearance. I take on the occasional
+    outside engagement when it's a good fit.
+  </p>
+
+  {
+    buckets.map((b, i) => (
+      <div class="row">
+        <div class="idx">
+          <MonoLabel accent>0{i + 1}</MonoLabel>
+        </div>
+        <div class="content">
+          <div class="title">{b.title}</div>
+          <p class="body">{b.body}</p>
+        </div>
+      </div>
+    ))
+  }
+  <div class="closer"></div>
+
+  <div class="cta-wrap">
+    <EmailCTA href="mailto:kevin@kevnet.cloud" trackId="email-work" />
+  </div>
+</div>
+
+<style>
+  .lead {
+    margin: 0 0 22px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--fg-dim);
+  }
+
+  .row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .idx {
+    flex-shrink: 0;
+    width: 22px;
+  }
+
+  .content {
+    flex: 1;
+  }
+
+  .title {
+    margin-bottom: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  .body {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--fg-dim);
+  }
+
+  .closer {
+    border-top: 1px solid var(--line);
+  }
+
+  .cta-wrap {
+    margin-top: 22px;
+  }
+</style>
