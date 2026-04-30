@@ -1,0 +1,391 @@
+<!doctype html>
+<!--
+  ride.kevnet.cloud — Developer Handoff
+  Polished V1 (Refined Dark, Jean-Luc addendum applied) + design tokens,
+  type ramp, components inventory, voice rules, copy deck, 404, and the
+  Astro file tree the dev agent should mirror.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ride.kevnet.cloud — handoff</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%237dd3fc'/%3E%3C/svg%3E"/>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: #f0eee9; overflow: hidden; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+    .phone-scroll { scrollbar-width: none; }
+    .phone-scroll::-webkit-scrollbar { display: none; }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="design-canvas.jsx"></script>
+  <script type="text/babel" src="phone-frame.jsx"></script>
+  <script type="text/babel" src="photo-placeholder.jsx"></script>
+  <script type="text/babel" src="variant-refined.jsx"></script>
+
+  <script type="text/babel">
+    // ── Tokens (mirrors DESIGN_GUIDELINES.md) ─────────────────────
+    const TOKENS = {
+      color: [
+        ['--bg',       '#0b0b0d',                       'page background'],
+        ['--bg2',      '#111114',                       'raised surface'],
+        ['--bg3',      '#16161a',                       'hover surface'],
+        ['--fg',       '#ecebe6',                       'primary text'],
+        ['--fg-dim',   'rgba(236,235,230,0.62)',        'body copy'],
+        ['--fg-mute',  'rgba(236,235,230,0.40)',        'metadata'],
+        ['--line',     'rgba(255,255,255,0.08)',        'default rule'],
+        ['--line2',    'rgba(255,255,255,0.14)',        'stronger rule'],
+        ['--accent',   '#7dd3fc',                       'links · index · CTA'],
+        ['--live',     '#34d399',                       'live indicator only'],
+      ],
+      type: [
+        ['Hero H1',     '46 / 0.96',  '600',  '-0.038em', 'sans / serif'],
+        ['Section H2',  '28 / 1.10',  '600',  '-0.025em', 'sans'],
+        ['Lead body',   '15.5 / 1.55','400',  '0',        'sans'],
+        ['Body',        '14–15 / 1.55','400', '0',        'sans'],
+        ['Card title',  '16 / 1.4',   '600',  '0',        'sans'],
+        ['Mono label',  '10.5 / 1.4', '400',  '0.08em',   'mono · UPPER'],
+        ['Plate',       '12 / 1',     '700',  '0.18em',   'mono · cream'],
+      ],
+      space: ['4', '6', '8', '10', '14', '18', '22', '28', '32'],
+    };
+
+    function TokenChip({ name, val, note }) {
+      const isColor = val.startsWith('#') || val.startsWith('rgb');
+      return (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ width: 28, height: 28, background: isColor ? val : 'transparent', borderRadius: 4, border: isColor ? '1px solid rgba(255,255,255,0.12)' : 'none', flexShrink: 0 }}/>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 12, color: '#ecebe6' }}>{name}</div>
+            <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 11, color: 'rgba(236,235,230,0.5)' }}>{val}</div>
+          </div>
+          <div style={{ fontSize: 11, color: 'rgba(236,235,230,0.55)', textAlign: 'right', flexShrink: 0 }}>{note}</div>
+        </div>
+      );
+    }
+
+    function HandoffCard({ title, subtitle, children, height = 844, width = 520 }) {
+      return (
+        <div style={{
+          width, height, background: '#0b0b0d', color: '#ecebe6',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif',
+          padding: '28px 28px 32px', boxSizing: 'border-box',
+          display: 'flex', flexDirection: 'column', overflow: 'hidden',
+        }}>
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)', marginBottom: 6 }}>{subtitle}</div>
+          <h2 style={{ fontSize: 26, fontWeight: 600, letterSpacing: '-0.025em', margin: '0 0 18px' }}>{title}</h2>
+          <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }} className="phone-scroll">
+            {children}
+          </div>
+        </div>
+      );
+    }
+
+    function TokensCard() {
+      return (
+        <HandoffCard subtitle="01 / TOKENS" title="Color & type">
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)', marginBottom: 6 }}>color</div>
+          {TOKENS.color.map(([n, v, note]) => <TokenChip key={n} name={n} val={v} note={note}/>)}
+
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)', margin: '24px 0 10px' }}>type ramp</div>
+          {TOKENS.type.map(([role, size, weight, track, family]) => (
+            <div key={role} style={{ padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'grid', gridTemplateColumns: '1.2fr 1fr 0.8fr 1.1fr 0.9fr', gap: 8, fontSize: 11.5, fontFamily: 'ui-monospace, monospace' }}>
+              <span style={{ color: '#ecebe6' }}>{role}</span>
+              <span style={{ color: 'rgba(236,235,230,0.62)' }}>{size}</span>
+              <span style={{ color: 'rgba(236,235,230,0.62)' }}>w{weight}</span>
+              <span style={{ color: 'rgba(236,235,230,0.62)' }}>{track}</span>
+              <span style={{ color: '#7dd3fc' }}>{family}</span>
+            </div>
+          ))}
+
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)', margin: '24px 0 10px' }}>spacing · 8pt base</div>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end' }}>
+            {TOKENS.space.map((s) => (
+              <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                <div style={{ width: 20, height: parseInt(s), background: '#7dd3fc', opacity: 0.4 }}/>
+                <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10, color: 'rgba(236,235,230,0.5)' }}>{s}</span>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)', margin: '28px 0 8px' }}>perf budget</div>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: 'rgba(236,235,230,0.7)', lineHeight: 1.7 }}>
+            <li>Lighthouse mobile 95+ all categories</li>
+            <li>LCP &lt; 1.5s on 4G — preload hero image</li>
+            <li>Total weight &lt; 500KB excluding hero</li>
+            <li>Zero render-blocking JS · zero cookies · zero 3rd-party</li>
+            <li>Twitch iframe never autoloaded — static card by default</li>
+          </ul>
+        </HandoffCard>
+      );
+    }
+
+    function VoiceCard() {
+      const Do = ({ children }) => <span style={{ color: '#34d399' }}>{children}</span>;
+      const Dont = ({ children }) => <span style={{ color: '#f87171', textDecoration: 'line-through' }}>{children}</span>;
+      return (
+        <HandoffCard subtitle="02 / VOICE" title="How Kevin sounds">
+          <p style={{ margin: '0 0 18px', fontSize: 14.5, lineHeight: 1.55, color: 'rgba(236,235,230,0.75)' }}>
+            First person. Warm. Lightly nerdy. Not a pitch deck.
+            Short sentences. Use them. Treat <strong style={{ color: '#ecebe6' }}>Jean-Luc</strong> as a named character in section 02 only. Everywhere else the car is "the Tesla" or it doesn't appear.
+          </p>
+
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)', margin: '0 0 8px' }}>punctuation rules</div>
+          <ul style={{ margin: '0 0 18px', paddingLeft: 18, fontSize: 13.5, lineHeight: 1.7, color: 'rgba(236,235,230,0.75)' }}>
+            <li><Dont>em dashes —</Dont> <Do>periods.</Do> <Do>en dashes –</Do> for ranges.</li>
+            <li><Dont>semicolons ;</Dont> <Do>break it into two sentences.</Do></li>
+            <li><Do>contractions</Do> · <Do>lowercase mono labels</Do> · <Do>sentence case headlines</Do></li>
+          </ul>
+
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)', margin: '0 0 8px' }}>jean-luc budget</div>
+          <div style={{ padding: 14, background: '#111114', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, marginBottom: 16 }}>
+            <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.55, color: 'rgba(236,235,230,0.75)' }}>
+              The <strong style={{ color: '#ecebe6' }}>name "Jean-Luc"</strong> and the <strong style={{ color: '#ecebe6' }}>plate "PICARD"</strong> are the entire Star Trek budget.
+              No insignia. No LCARS. No quotes. No logos. No combadge. The passenger figures it out or they don't. Spelling it out kills it.
+            </p>
+          </div>
+
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)', margin: '0 0 8px' }}>do · don't</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, overflow: 'hidden' }}>
+            {[
+              ['available for hire', 'soft section that says it exists'],
+              ['"Hi, I\'m Kevin 👋"', 'Kevin. And his Model Y.'],
+              ['testimonials block', 'a federal-clients line if Kevin opts in'],
+              ['skill bars · 90% Drupal', '"Drupal" as a chip'],
+              ['theme toggle', 'commit to dark'],
+              ['exit-intent modal', 'an email link'],
+              ['gradient hero text', 'one-color word in accent'],
+              ['Vercel/Apple/Tesla pastiche', 'Linear is the closest reference'],
+            ].map(([dont, doIt], i) => (
+              <React.Fragment key={i}>
+                <div style={{ padding: '10px 12px', background: 'rgba(248,113,113,0.06)', borderBottom: i < 7 ? '1px solid rgba(255,255,255,0.06)' : 'none', borderRight: '1px solid rgba(255,255,255,0.08)' }}>
+                  <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 9.5, color: '#f87171', letterSpacing: '0.08em' }}>DON'T</span>
+                  <div style={{ fontSize: 12.5, color: '#ecebe6', marginTop: 2 }}>{dont}</div>
+                </div>
+                <div style={{ padding: '10px 12px', background: 'rgba(52,211,153,0.05)', borderBottom: i < 7 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
+                  <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 9.5, color: '#34d399', letterSpacing: '0.08em' }}>DO</span>
+                  <div style={{ fontSize: 12.5, color: '#ecebe6', marginTop: 2 }}>{doIt}</div>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+        </HandoffCard>
+      );
+    }
+
+    function ComponentsCard() {
+      const groups = [
+        ['Layout', [
+          ['Page',       'shell · color-scheme dark · view-source comment · console.log'],
+          ['Section',    'hr · mono index · H2 · slot'],
+          ['Rule',       '1px hairline at --line'],
+        ]],
+        ['Header & hero', [
+          ['TopNav',     'kevnet.cloud / ride · LiveDot'],
+          ['Hero',       'kicker · H1 (Model Y in accent) · subtitle · photo (LCP)'],
+          ['JumpTiles',  '3-up anchor grid'],
+        ]],
+        ['Tesla section (only)', [
+          ['MeetJeanLuc','section 02 only · uses the name'],
+          ['SpecGrid',   '2×2 · driver mode = "engage"'],
+          ['Plate',      'cream · 12/700/0.18em mono · ≤110px wide'],
+          ['FAQ',        'native <details> · + rotates to ×'],
+          ['ReferralCard','--bg2 card · honest pitch'],
+        ]],
+        ['Show', [
+          ['KevinShow',     'channel card + 2 clips'],
+          ['ChannelCard',   'art · avatar · name · status · Follow'],
+          ['FollowButton',  'pill · accent fill · #000 text'],
+        ]],
+        ['Work + tail', [
+          ['WorkBuckets',   '01/02/03 · hairline rows'],
+          ['EmailCTA',      'accent border · accent text · centered'],
+          ['DirectBooking', 'low visual weight · text-only'],
+          ['Connect',       '2×2 (mobile) → 4×1 (desktop)'],
+          ['Footer',        'two mono lines'],
+        ]],
+        ['Atoms', [
+          ['MonoLabel', '10.5px · 0.08em · uppercase'],
+          ['LiveDot',   '7px green · 8px glow · pulse opt-in'],
+          ['UnderlinedLink','bg-image underline · ↗ external · → internal'],
+          ['Photo',     'AVIF/WebP · explicit dims · lazy except hero'],
+          ['Chip',      'pill · --line2 border · NO fill'],
+        ]],
+      ];
+      return (
+        <HandoffCard subtitle="03 / COMPONENTS" title="Inventory">
+          {groups.map(([g, items]) => (
+            <div key={g} style={{ marginBottom: 18 }}>
+              <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7dd3fc', marginBottom: 6 }}>{g}</div>
+              {items.map(([name, desc]) => (
+                <div key={name} style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: 12, padding: '7px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 12, color: '#ecebe6' }}>&lt;{name}/&gt;</span>
+                  <span style={{ fontSize: 12.5, color: 'rgba(236,235,230,0.62)' }}>{desc}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </HandoffCard>
+      );
+    }
+
+    function StackCard() {
+      return (
+        <HandoffCard subtitle="04 / STACK" title="Build & deploy" height={844}>
+          <pre style={{
+            fontFamily: 'ui-monospace, monospace', fontSize: 12, lineHeight: 1.6, color: '#ecebe6',
+            background: '#111114', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8,
+            padding: 16, margin: '0 0 18px', whiteSpace: 'pre-wrap',
+          }}>{`src/
+├── components/
+│   ├── Page.astro
+│   ├── TopNav.astro          · LiveDot
+│   ├── Hero.astro            · uses <Photo eager>
+│   ├── JumpTiles.astro
+│   ├── Section.astro
+│   ├── MeetKevin.astro
+│   ├── MeetJeanLuc.astro     · section 02 only
+│   │   ├── SpecGrid.astro    · driver mode = "engage"
+│   │   ├── Plate.astro       · cream rect, mono 700, ≤110px
+│   │   ├── FAQ.astro         · native <details>
+│   │   └── ReferralCard.astro
+│   ├── KevinShow.astro
+│   │   ├── ChannelCard.astro
+│   │   └── FollowButton.astro
+│   ├── WorkBuckets.astro
+│   ├── EmailCTA.astro
+│   ├── DirectBooking.astro
+│   ├── Connect.astro
+│   ├── Footer.astro
+│   └── atoms/
+│       ├── MonoLabel.astro
+│       ├── UnderlinedLink.astro
+│       ├── Chip.astro
+│       └── Photo.astro
+├── styles/
+│   └── tokens.css            · the only :root vars
+├── pages/
+│   ├── index.astro
+│   └── 404.astro             · "Captain, that page does not exist."
+└── public/
+    ├── humans.txt
+    └── .well-known/whoami    · {"who":"kevin"...}`}</pre>
+
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)', margin: '0 0 8px' }}>stack</div>
+          <ul style={{ margin: '0 0 18px', paddingLeft: 18, fontSize: 13, lineHeight: 1.7, color: 'rgba(236,235,230,0.75)' }}>
+            <li>Astro · static output · component reuse · near-zero runtime JS</li>
+            <li>Cloudflare Pages from GitHub · apex CNAME ride.kevnet.cloud</li>
+            <li>Vanilla CSS with CSS variables (no Tailwind needed at this size)</li>
+            <li>System font stack · NO Google Fonts</li>
+            <li>Astro Image component for AVIF/WebP</li>
+            <li>Cloudflare Web Analytics · cookieless · no banner</li>
+          </ul>
+
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)', margin: '0 0 8px' }}>live status worker</div>
+          <p style={{ margin: '0 0 8px', fontSize: 13, lineHeight: 1.55, color: 'rgba(236,235,230,0.62)' }}>
+            <code style={{ background: '#111114', padding: '1px 5px', fontSize: 12 }}>/api/live</code> — Cloudflare Worker proxies Twitch's <code style={{ background: '#111114', padding: '1px 5px', fontSize: 12 }}>streams</code> endpoint.
+            Cache 60s at the edge. Returns <code style={{ background: '#111114', padding: '1px 5px', fontSize: 12 }}>{'{ live: bool, title?: string }'}</code>.
+            Client never hits Twitch directly. Token in Worker secrets.
+          </p>
+
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)', margin: '18px 0 8px' }}>easter eggs · the budget</div>
+          <ol style={{ margin: 0, paddingLeft: 20, fontSize: 12.5, lineHeight: 1.7, color: 'rgba(236,235,230,0.7)' }}>
+            <li>view-source comment at the top of the HTML</li>
+            <li>console.log greeting (styled, with email)</li>
+            <li>Konami code → <code style={{ fontSize: 11.5 }}>data-dev-mode</code> on body</li>
+            <li>/humans.txt</li>
+            <li>/.well-known/whoami JSON</li>
+            <li>404: "Captain, that page does not exist."</li>
+          </ol>
+          <p style={{ margin: '12px 0 0', fontSize: 12, color: 'rgba(236,235,230,0.5)', fontStyle: 'italic' }}>
+            If you add a seventh, remove one. Restraint is the joke.
+          </p>
+        </HandoffCard>
+      );
+    }
+
+    function NotFoundCard() {
+      // 404 mock — same H1 system as the hero, restrained.
+      return (
+        <PhoneFrame statusBarColor="#0b0b0d" statusBarFg="#fff" bg="#0b0b0d">
+          <div style={{
+            background: '#0b0b0d', color: '#ecebe6', minHeight: '100%',
+            fontFamily: '-apple-system, BlinkMacSystemFont, system-ui, sans-serif',
+            display: 'flex', flexDirection: 'column',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 22px 10px' }}>
+              <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)' }}>kevnet.cloud / ride</span>
+              <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#f87171' }}>err · 404</span>
+            </div>
+
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 22px' }}>
+              <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)', marginBottom: 14 }}>· stardate 47988.1</div>
+              <h1 style={{ fontSize: 40, lineHeight: 1, fontWeight: 600, letterSpacing: '-0.038em', margin: '0 0 18px' }}>
+                Captain,<br/>
+                that page<br/>
+                <span style={{ color: '#7dd3fc' }}>does&nbsp;not&nbsp;exist</span>.
+              </h1>
+              <p style={{ fontSize: 14.5, color: 'rgba(236,235,230,0.62)', margin: '0 0 22px', maxWidth: 320, lineHeight: 1.55 }}>
+                Probably a typo. Could be a stale link. Either way, it's not here.
+              </p>
+              <a href="/" style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                fontSize: 14, color: '#7dd3fc',
+                borderBottom: '1px solid currentColor', paddingBottom: 1, alignSelf: 'flex-start',
+              }}>
+                ← back to ride.kevnet.cloud
+              </a>
+            </div>
+
+            <div style={{ padding: '20px 22px 28px', display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)' }}>© 2026 kevin · springfield mo</span>
+              <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(236,235,230,0.4)' }}>built by kevin</span>
+            </div>
+          </div>
+        </PhoneFrame>
+      );
+    }
+
+    function App() {
+      return (
+        <DesignCanvas>
+          <DCSection id="primary" title="ride.kevnet.cloud" subtitle="Final direction · Refined Dark · Jean-Luc addendum applied">
+            <DCArtboard id="mobile" label="Mobile · 390 × 844 · production" width={390} height={844}>
+              <PhoneFrame statusBarColor="#0b0b0d" statusBarFg="#fff" bg="#0b0b0d">
+                <VariantRefined accent="#7dd3fc" font="system"/>
+              </PhoneFrame>
+            </DCArtboard>
+            <DCArtboard id="404" label="404 · Picard-flavored, restrained" width={390} height={844}>
+              <NotFoundCard/>
+            </DCArtboard>
+          </DCSection>
+
+          <DCSection id="handoff" title="Developer handoff" subtitle="Hand this package to the dev agent. The Astro file tree mirrors the components below.">
+            <DCArtboard id="tokens" label="01 · Tokens — color, type, spacing, perf" width={520} height={844}>
+              <TokensCard/>
+            </DCArtboard>
+            <DCArtboard id="voice" label="02 · Voice — copy rules, do/don't, Jean-Luc budget" width={520} height={844}>
+              <VoiceCard/>
+            </DCArtboard>
+            <DCArtboard id="components" label="03 · Components — full inventory" width={520} height={844}>
+              <ComponentsCard/>
+            </DCArtboard>
+            <DCArtboard id="stack" label="04 · Stack — Astro tree, deploy, easter eggs" width={520} height={844}>
+              <StackCard/>
+            </DCArtboard>
+          </DCSection>
+        </DesignCanvas>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>
