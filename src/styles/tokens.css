@@ -1,0 +1,21 @@
+:root {
+  --bg: #0b0b0d;
+  --bg2: #111114;
+  --bg3: #16161a;
+  --fg: #ecebe6;
+  --fg-dim: rgba(236, 235, 230, 0.62);
+  --fg-mute: rgba(236, 235, 230, 0.4);
+  --line: rgba(255, 255, 255, 0.08);
+  --line2: rgba(255, 255, 255, 0.14);
+  --accent: #7dd3fc;
+  --live: #34d399;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, monospace;
+  --font-serif: "Iowan Old Style", Charter, Georgia, serif;
+
+  --gutter: 22px;
+  --max-content: 720px;
+  --section-pad-y-top: 30px;
+  --section-pad-y-bottom: 32px;
+}

@@ -1,0 +1,27 @@
+---
+type Props = {
+  accent?: boolean;
+  as?: "span" | "div";
+};
+
+const { accent = false, as = "span" }: Props = Astro.props;
+const Tag = as;
+---
+
+<Tag class:list={["mono", { accent }]}>
+  <slot />
+</Tag>
+
+<style>
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-mute);
+  }
+
+  .mono.accent {
+    color: var(--accent);
+  }
+</style>

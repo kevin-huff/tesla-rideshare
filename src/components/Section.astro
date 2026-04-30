@@ -1,0 +1,43 @@
+---
+import Rule from "./Rule.astro";
+import MonoLabel from "./atoms/MonoLabel.astro";
+
+type Props = {
+  index: string;
+  title: string;
+  id?: string;
+  first?: boolean;
+};
+
+const { index, title, id, first = false } = Astro.props;
+---
+
+{!first && <Rule />}
+<section id={id}>
+  <div class="index">
+    <MonoLabel>{index}</MonoLabel>
+  </div>
+  <h2>{title}</h2>
+  <slot />
+</section>
+
+<style>
+  section {
+    padding: var(--section-pad-y-top) var(--gutter) var(--section-pad-y-bottom);
+    max-width: var(--max-content);
+    margin: 0 auto;
+  }
+
+  .index {
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    margin: 0 0 22px;
+    font-size: 28px;
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+  }
+</style>

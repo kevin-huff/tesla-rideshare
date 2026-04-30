@@ -1,0 +1,59 @@
+---
+type Props = {
+  href: string;
+  external?: boolean;
+  internal?: boolean;
+  accent?: boolean;
+  trackId?: string;
+};
+
+const {
+  href,
+  external = false,
+  internal = false,
+  accent = false,
+  trackId,
+} = Astro.props;
+
+const rel = external ? "noopener noreferrer" : undefined;
+const target = external ? "_blank" : undefined;
+const arrow = external ? "↗" : internal ? "→" : null;
+---
+
+<a
+  href={href}
+  rel={rel}
+  target={target}
+  data-track={trackId}
+  class:list={["ulink", { accent }]}
+>
+  <span class="label"><slot /></span>
+  {arrow && <span class="arrow" aria-hidden="true">{arrow}</span>}
+</a>
+
+<style>
+  .ulink {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    color: var(--fg);
+    font-size: 14px;
+  }
+
+  .ulink.accent {
+    color: var(--accent);
+  }
+
+  .label {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    padding-bottom: 1px;
+  }
+
+  .arrow {
+    font-size: 0.9em;
+    line-height: 1;
+  }
+</style>
