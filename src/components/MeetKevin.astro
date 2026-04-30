@@ -1,0 +1,74 @@
+---
+import MonoLabel from "./atoms/MonoLabel.astro";
+import Chip from "./atoms/Chip.astro";
+import UnderlinedLink from "./atoms/UnderlinedLink.astro";
+import PhotoPlaceholder from "./atoms/PhotoPlaceholder.astro";
+
+const interests = [
+  "Drupal",
+  "AI tooling",
+  "sim racing",
+  "tabletop",
+  "homesteading",
+  "federal IT",
+];
+---
+
+<div class="meet-kevin">
+  <div class="row">
+    <div class="headshot">
+      <PhotoPlaceholder caption="HEADSHOT" width={88} height={88} radius={6} />
+    </div>
+    <p class="bio">
+      I run technology for a federal contractor by day. Off the clock I drive my Tesla, stream on Twitch, and tinker with whatever caught my eye that week.
+      <span class="bio-todo"> [BIO · 3 to 5 sentences in Kevin's voice]</span>
+    </p>
+  </div>
+
+  <div class="currently">
+    <MonoLabel>currently into</MonoLabel>
+  </div>
+  <div class="chips">
+    {interests.map((label) => <Chip label={label} />)}
+  </div>
+
+  <UnderlinedLink href="#" external accent trackId="linkedin">
+    LinkedIn — for the resume crowd
+  </UnderlinedLink>
+</div>
+
+<style>
+  .row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .headshot {
+    flex-shrink: 0;
+    width: 88px;
+  }
+
+  .bio {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--fg);
+  }
+
+  .bio-todo {
+    color: var(--fg-mute);
+  }
+
+  .currently {
+    margin-bottom: 10px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+</style>
