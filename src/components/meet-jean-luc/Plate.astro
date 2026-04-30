@@ -1,0 +1,42 @@
+---
+import MonoLabel from "../atoms/MonoLabel.astro";
+
+type Props = {
+  text?: string;
+  caption?: string;
+};
+
+const { text = "PICARD", caption = "missouri · 2023" }: Props = Astro.props;
+---
+
+<div class="plate-row">
+  <span class="plate" aria-label={`License plate: ${text}`}>{text}</span>
+  <MonoLabel>{caption}</MonoLabel>
+</div>
+
+<style>
+  .plate-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .plate {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 110px;
+    padding: 4px 10px 5px;
+    background: #f4efe1;
+    color: #1a1816;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    box-shadow:
+      inset 0 0 0 2px #f4efe1,
+      inset 0 0 0 3px rgba(0, 0, 0, 0.12);
+  }
+</style>

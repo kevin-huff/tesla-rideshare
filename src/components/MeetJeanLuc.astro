@@ -1,0 +1,50 @@
+---
+import MonoLabel from "./atoms/MonoLabel.astro";
+import PhotoPlaceholder from "./atoms/PhotoPlaceholder.astro";
+import SpecGrid from "./meet-jean-luc/SpecGrid.astro";
+import Plate from "./meet-jean-luc/Plate.astro";
+import FAQ from "./meet-jean-luc/FAQ.astro";
+import ReferralCard from "./meet-jean-luc/ReferralCard.astro";
+---
+
+<div class="meet-jean-luc">
+  <div class="subhead">
+    <MonoLabel>the model y</MonoLabel>
+  </div>
+
+  <div class="photos">
+    <PhotoPlaceholder caption="EXTERIOR · 3/4 FRONT" height={210} />
+    <div class="photos-row">
+      <PhotoPlaceholder caption="INTERIOR" height={120} />
+      <PhotoPlaceholder caption="SCREEN" height={120} />
+    </div>
+  </div>
+
+  <SpecGrid />
+
+  <div class="plate">
+    <Plate />
+  </div>
+
+  <FAQ />
+
+  <ReferralCard />
+</div>
+
+<style>
+  .subhead {
+    /* pull the mono subhead up under the H2's bottom margin (22px) */
+    margin: -16px 0 18px;
+  }
+
+  .photos-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .plate {
+    margin-top: 22px;
+  }
+</style>
