@@ -21,6 +21,7 @@ const { title = "ride.kevnet.cloud", description } = Astro.props;
     <meta name="color-scheme" content="dark" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    <slot name="head" />
   </head>
   <body>
     <slot />
