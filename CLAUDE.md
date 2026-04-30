@@ -2,9 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Repository state
+## Build commands
 
-Greenfield. The repo currently contains `LICENSE`, a stub `README.md`, and the full design + planning bundle under `planning/`. No Astro project has been scaffolded yet — there is no `package.json`, no source tree, no build/test/lint commands. Until the project is initialized, do not invent commands. Once `pnpm create astro` (or equivalent) has run, update this file with the real scripts.
+Astro 6, static output, vanilla CSS. Node LTS via `.nvmrc`. pnpm.
+
+- `pnpm install` — install deps
+- `pnpm dev` — local dev server at `http://localhost:4321/`
+- `pnpm build` — produce `dist/`
+- `pnpm preview` — serve the built site locally
+- `pnpm check` — `astro check` (TypeScript + Astro diagnostics)
+- `pnpm format` — Prettier with the Astro plugin
+
+The foundation step has shipped: tokens, base shell (`Page`, `Section`, `Rule`), atoms (`MonoLabel`, `UnderlinedLink`, `Chip`, `Photo`, `PhotoPlaceholder`), and a smoke-test `index.astro`. Real sections (TopNav, Hero, JumpTiles, etc.) come next.
 
 ## The planning bundle (read order)
 

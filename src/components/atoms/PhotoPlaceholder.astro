@@ -1,0 +1,77 @@
+---
+// DELETE BEFORE LAUNCH (per planning/project/COMPONENTS.md)
+import MonoLabel from "./MonoLabel.astro";
+
+type Props = {
+  caption?: string;
+  width?: number | string;
+  height?: number;
+  radius?: number;
+};
+
+const {
+  caption = "PLACEHOLDER",
+  width = "100%",
+  height = 210,
+  radius = 8,
+} = Astro.props;
+
+const widthAttr = typeof width === "number" ? `${width}px` : width;
+---
+
+<div
+  class="ph"
+  style={`--ph-w:${widthAttr};--ph-h:${height}px;--ph-radius:${radius}px;`}
+>
+  <svg
+    class="stripes"
+    aria-hidden="true"
+    width="100%"
+    height="100%"
+    preserveAspectRatio="none"
+  >
+    <defs>
+      <pattern
+        id="ph-stripes"
+        width="14"
+        height="14"
+        patternUnits="userSpaceOnUse"
+        patternTransform="rotate(45)"
+      >
+        <rect width="14" height="14" fill="transparent"></rect>
+        <line x1="0" y1="0" x2="0" y2="14" stroke="rgba(255,255,255,0.05)" stroke-width="2"></line>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#ph-stripes)"></rect>
+  </svg>
+  <div class="caption">
+    <MonoLabel>{caption}</MonoLabel>
+  </div>
+</div>
+
+<style>
+  .ph {
+    position: relative;
+    width: var(--ph-w);
+    height: var(--ph-h);
+    background: #101013;
+    border: 1px solid var(--line);
+    border-radius: var(--ph-radius);
+    overflow: hidden;
+  }
+
+  .stripes {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .caption {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

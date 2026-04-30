@@ -1,0 +1,50 @@
+---
+import Page from "../components/Page.astro";
+import Section from "../components/Section.astro";
+import Chip from "../components/atoms/Chip.astro";
+import UnderlinedLink from "../components/atoms/UnderlinedLink.astro";
+import PhotoPlaceholder from "../components/atoms/PhotoPlaceholder.astro";
+---
+
+<Page
+  title="ride.kevnet.cloud — foundation"
+  description="Foundation smoke test for ride.kevnet.cloud."
+>
+  <Section first index="00 / SMOKE TEST" title="Foundation">
+    <p>
+      Tokens are loaded. Type and color stacks resolve. Atoms compose. The next
+      step replaces this page with the top of the real site.
+    </p>
+
+    <div class="row">
+      <Chip label="tokens" />
+      <Chip label="atoms" />
+      <Chip label="dark" />
+    </div>
+
+    <PhotoPlaceholder caption="HERO · KEVIN + MODEL Y" height={240} />
+
+    <p class="link">
+      <UnderlinedLink href="#" accent internal>jump to a future section</UnderlinedLink>
+    </p>
+  </Section>
+</Page>
+
+<style>
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 4px 0 22px;
+  }
+
+  .link {
+    margin-top: 22px;
+  }
+
+  p {
+    color: var(--fg-dim);
+    margin: 0 0 18px;
+    line-height: 1.55;
+  }
+</style>

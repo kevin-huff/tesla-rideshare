@@ -1,0 +1,39 @@
+---
+import "../styles/global.css";
+
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+const { title = "ride.kevnet.cloud", description } = Astro.props;
+---
+
+<!doctype html>
+<!--
+  hi from kevin.
+  the door is open: kevin@kevnet.cloud
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+  </head>
+  <body>
+    <slot />
+    <script is:inline>
+      // easter egg: hidden-layer console greeting (DESIGN_GUIDELINES §11)
+      console.log(
+        "%c make it so. ",
+        "background:#7dd3fc;color:#000;padding:2px 8px;border-radius:3px;font-family:ui-monospace,SF Mono,Menlo,Monaco,monospace;font-weight:700;letter-spacing:0.04em",
+      );
+      console.log(
+        "%ckevin@kevnet.cloud",
+        "color:#7dd3fc;font-family:ui-monospace,SF Mono,Menlo,Monaco,monospace",
+      );
+    </script>
+  </body>
+</html>
