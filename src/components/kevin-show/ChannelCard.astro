@@ -1,0 +1,126 @@
+---
+import LiveDot from "../atoms/LiveDot.astro";
+import MonoLabel from "../atoms/MonoLabel.astro";
+import PhotoPlaceholder from "../atoms/PhotoPlaceholder.astro";
+import FollowButton from "./FollowButton.astro";
+
+type ScheduleRow = { day: string; time: string; title: string };
+
+type Props = {
+  channel?: string;
+  url?: string;
+  live?: boolean;
+  streamTitle?: string;
+  schedule?: ScheduleRow[];
+};
+
+const {
+  channel = "ZilchGnu",
+  url = "https://twitch.tv/ZilchGnu",
+  live = false,
+  streamTitle,
+  schedule = [
+    { day: "tue", time: "8:00pm CT", title: "building stuff" },
+    { day: "fri", time: "8:00pm CT", title: "variety / games" },
+  ],
+}: Props = Astro.props;
+---
+
+<article class="channel-card">
+  <PhotoPlaceholder caption="CHANNEL ART · 16:6" height={120} radius={0} />
+
+  <div class="body">
+    <div class="row">
+      <div class="avatar" aria-hidden="true">K</div>
+      <div class="name-status">
+        <div class="name">{channel}</div>
+        {
+          live && (
+            <div class="status">
+              <LiveDot />
+              <MonoLabel>
+                live{streamTitle && ` · ${streamTitle}`}
+              </MonoLabel>
+            </div>
+          )
+        }
+      </div>
+      <FollowButton href={url} channel={channel} />
+    </div>
+
+    <div class="schedule-label">
+      <MonoLabel>schedule</MonoLabel>
+    </div>
+    <div class="schedule">
+      {
+        schedule.map((s) => (
+          <div class="schedule-row">
+            {s.day} · {s.time} – {s.title}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</article>
+
+<style>
+  .channel-card {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg2);
+  }
+
+  .body {
+    padding: 14px 14px 16px;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1f1f24;
+    color: var(--fg);
+    border-radius: 18px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .name-status {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .name {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .schedule-label {
+    margin-bottom: 8px;
+  }
+
+  .schedule-row {
+    font-size: 13.5px;
+    color: var(--fg);
+    line-height: 1.7;
+  }
+</style>

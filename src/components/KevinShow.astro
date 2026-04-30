@@ -1,0 +1,49 @@
+---
+import MonoLabel from "./atoms/MonoLabel.astro";
+import PhotoPlaceholder from "./atoms/PhotoPlaceholder.astro";
+import ChannelCard from "./kevin-show/ChannelCard.astro";
+
+type Props = {
+  channel?: string;
+  url?: string;
+};
+
+const { channel = "ZilchGnu", url = "https://twitch.tv/ZilchGnu" }: Props =
+  Astro.props;
+---
+
+<div class="kevin-show">
+  <p class="lead">
+    Twice a week I turn the camera on and stream whatever I'm building,
+    breaking, or thinking about. Tech, sometimes games, occasionally the Tesla.
+  </p>
+
+  <ChannelCard channel={channel} url={url} />
+
+  <div class="clips-label">
+    <MonoLabel>recent clips</MonoLabel>
+  </div>
+  <div class="clips">
+    <PhotoPlaceholder caption="CLIP · 0:42" height={110} />
+    <PhotoPlaceholder caption="CLIP · 1:17" height={110} />
+  </div>
+</div>
+
+<style>
+  .lead {
+    margin: 0 0 18px;
+    font-size: 15px;
+    color: var(--fg-dim);
+    line-height: 1.55;
+  }
+
+  .clips-label {
+    margin: 24px 0 10px;
+  }
+
+  .clips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+</style>
