@@ -17,8 +17,6 @@ Astro 6, static output, vanilla CSS. Node LTS via `.nvmrc`. pnpm.
 
 Set in **Settings → Environment variables**, for **Production AND Preview**:
 
-- `TWITCH_CLIENT_ID` — plaintext. From dev.twitch.tv app.
-- `TWITCH_CLIENT_SECRET` — **encrypted**. From dev.twitch.tv app. Required for the `/api/live` Pages Function. Without these, `/api/live` returns `{ live: false }` and the top-nav indicator stays hidden.
 - `PUBLIC_CF_ANALYTICS_TOKEN` — plaintext. From the Cloudflare Pages → Web Analytics tab once enabled. Without this, the analytics beacon does not ship and no events are recorded. The token is public-by-design (`PUBLIC_` prefix is intentional — Astro requires it to expose the value at build time).
 
 ## The planning bundle (read order)
@@ -50,11 +48,9 @@ Where the planning bundle and the older dev plan disagree, the bundle wins.
 - **Package manager:** pnpm preferred, npm acceptable
 - **Node:** current LTS, pinned via `.nvmrc` and `package.json` engines
 
-### Serverless: one worker, on purpose
+### Serverless: none
 
-The older dev plan said "no serverless functions in v1." The design bundle adds exactly one: a Cloudflare Worker at `/api/live` that proxies Twitch's `streams` endpoint, caches 60s at the edge, and returns `{ live: bool, title?: string }`. The Twitch token lives in Worker secrets — **the client never hits Twitch directly**. The `<TopNav>` live indicator is the only consumer.
-
-This is the only server-side piece. Don't add others without checking with Kevin.
+There are no Pages Functions or Workers. An earlier iteration shipped `/api/live` to surface Twitch live state in the TopNav, but the streaming-during-rideshare framing was pulled (lower legal/PR profile). The site is fully static. Don't add a serverless piece without checking with Kevin first — the constraint is intentional.
 
 ## Target file tree (mirror this)
 
@@ -64,19 +60,17 @@ Per the bundle, `src/` should look like this when scaffolded:
 src/
 ├── components/
 │   ├── Page.astro            · shell, view-source comment, console.log greeting
-│   ├── TopNav.astro          · LiveDot, not sticky
+│   ├── TopNav.astro          · brand label only, not sticky
 │   ├── Hero.astro            · uses <Photo eager> for LCP
 │   ├── JumpTiles.astro       · 3-up, never 2 or 4
 │   ├── Section.astro         · index/title/id slot wrapper
+│   ├── PhotoGallery.astro    · click-cycle gallery with lightbox popout
 │   ├── MeetKevin.astro
 │   ├── MeetJeanLuc.astro     · section 02 only — the only place the car has a name
-│   │   ├── SpecGrid.astro    · driver mode = "engage" (the whole joke)
-│   │   ├── Plate.astro       · cream rect, mono 700, ≤110px wide
+│   │   ├── SpecGrid.astro    · self-driving mode = "engage" (the whole joke)
+│   │   ├── Plate.astro       · big-picard.png photo, centered, no caption
 │   │   ├── FAQ.astro         · native <details>, never custom JS
 │   │   └── ReferralCard.astro
-│   ├── KevinShow.astro
-│   │   ├── ChannelCard.astro
-│   │   └── FollowButton.astro · links to twitch.tv/thekevinshow, NEVER iframes Twitch
 │   ├── WorkBuckets.astro
 │   ├── EmailCTA.astro
 │   ├── DirectBooking.astro
@@ -86,7 +80,8 @@ src/
 │       ├── MonoLabel.astro
 │       ├── UnderlinedLink.astro
 │       ├── Chip.astro
-│       └── Photo.astro
+│       ├── Photo.astro
+│       └── PhotoPlaceholder.astro · DELETE BEFORE LAUNCH (no longer referenced)
 ├── styles/
 │   └── tokens.css            · the only :root vars
 ├── pages/
@@ -94,6 +89,7 @@ src/
 │   └── 404.astro             · "Captain, that page does not exist."
 └── public/
     ├── humans.txt
+    ├── og.jpg                · 1200x630 OG/Twitter card image
     └── .well-known/whoami    · tiny JSON
 ```
 
@@ -106,7 +102,6 @@ Note: COMPONENTS.md and the file tree both call the not-found page `404.astro`; 
 - Total page weight under 500KB excluding the hero (hero under 200KB after optimization)
 - Zero render-blocking JavaScript
 - CLS under 0.05; TTI under 2s on mid-tier mobile
-- Twitch embed is **never** loaded on initial render
 - Page must render with JavaScript disabled (graceful degradation)
 - WCAG 2.1 AA: semantic HTML, single h1, keyboard reachability, visible focus, alt text everywhere, `prefers-reduced-motion` respected
 - Every tap target ≥ 44px high
@@ -116,7 +111,21 @@ If a change would violate any of these, flag it before shipping.
 
 ## Out of scope for v1
 
-Booking system, blog/CMS, newsletter, multi-page nav, live Twitch iframe, dark/light toggle, cookie banner, i18n, comments/testimonials, loading spinner, popups, exit-intent modals, chat bubbles, available-for-hire badge, skill bars, anything else server-side beyond the `/api/live` worker. Don't add these even if they look like obvious wins — they were explicitly cut.
+Booking system, blog/CMS, newsletter, multi-page nav, Twitch streaming/follow surfaces (intentionally pulled — see "Streaming framing" below), live Twitch iframe, dark/light toggle, cookie banner, i18n, comments/testimonials, loading spinner, popups, exit-intent modals, chat bubbles, available-for-hire badge, skill bars, server-side anything. Don't add these even if they look like obvious wins.
+
+## Streaming framing (lower-profile policy)
+
+An earlier iteration of this site had a "The Kevin Show" section, a TopNav live indicator backed by `/api/live`, recent clip thumbnails, and a recording/streaming privacy notice. Kevin pulled all of it to lower the legal and PR risk of putting passenger-facing streaming context on the rideshare landing page. The current page does not pitch streaming-as-content for rideshare passengers.
+
+What can stay on the page:
+- Mention that Kevin builds IRL setups and chatbots **for streamers** (his work, not his streams) in `MeetKevin`'s bio.
+- The `Connect` grid's `twitch` tile linking to `twitch.tv/ZilchGnu` — a social link, not a "watch me drive" pitch.
+
+What must NOT come back without a deliberate decision:
+- A dedicated section about Kevin's own streaming.
+- Any "watch live" / "streaming now" UI on the rideshare landing page.
+- The `/api/live` Pages Function or anything that calls Twitch from the client.
+- A standalone recording-privacy section. The reason that section existed was to give rideshare passengers notice that they might be on stream — without the streaming framing, the notice is unnecessary and dragging it back in re-introduces the risk it was created to mitigate.
 
 ## The Jean-Luc rule (important — read this)
 
@@ -134,7 +143,7 @@ Hidden layers (HTML view-source comment, `console.log` greeting, Konami code dev
 
 ## Tracking and URL handling
 
-QR codes will append `?src=qr` (and variants like `?src=qr-card`, `?src=qr-window`). Do not strip these query params — analytics relies on them. Outbound links (Twitch, Tesla referral, LinkedIn, GitHub, mailto) need a data attribute or class so Cloudflare Analytics can record them as events.
+QR codes will append `?src=qr` (and variants like `?src=qr-card`, `?src=qr-window`). Do not strip these query params — analytics relies on them. Outbound links (Tesla referral, LinkedIn, GitHub, Twitch social link, mailto) need a data attribute or class so Cloudflare Analytics can record them as events.
 
 External links open in new tabs with `rel="noopener noreferrer"`.
 
