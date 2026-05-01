@@ -1,0 +1,135 @@
+---
+import UnderlinedLink from "./atoms/UnderlinedLink.astro";
+
+type Spot = {
+  name: string;
+  body: string;
+  mapQuery: string;
+  trackId: string;
+};
+
+const spots: Spot[] = [
+  {
+    name: "The Giant Fork",
+    body: "One of my favorite Springfield oddities. It is exactly what it sounds like: a giant fork stuck into the ground in Chesterfield Village. Weird, free, quick photo stop, and much more fun than it has any right to be.",
+    mapQuery: "The Giant Fork Springfield MO",
+    trackId: "map-giant-fork",
+  },
+  {
+    name: "FD's Grillhouse",
+    body: "A reliable dinner pick when someone wants something nicer than fast food but not stiff or pretentious. Good casual meal, good atmosphere, and one of those places that works for a normal night out.",
+    mapQuery: "FD's Grillhouse Springfield MO",
+    trackId: "map-fds-grillhouse",
+  },
+  {
+    name: "Happy China",
+    body: "My low-key Chinese food pick. Not flashy. Not trying to be trendy. Just one of those Springfield places that scratches the itch when you want takeout and do not want to overthink dinner.",
+    mapQuery: "Happy China Springfield MO",
+    trackId: "map-happy-china",
+  },
+  {
+    name: "Corner 21",
+    body: "If someone asks for Chinese food and wants something more serious than the usual Springfield-style takeout lane, Corner 21 is the move. Good pick for people who actually care about the food.",
+    mapQuery: "Corner 21 Springfield MO",
+    trackId: "map-corner-21",
+  },
+  {
+    name: "Cafe Cusco",
+    body: "Commercial Street has its own feel, and Cafe Cusco is one of the anchors. Good food, old Springfield texture, and a better answer than sending everybody to the same three tourist stops.",
+    mapQuery: "Cafe Cusco Springfield MO",
+    trackId: "map-cafe-cusco",
+  },
+  {
+    name: "Gailey's Breakfast Cafe",
+    body: "A Springfield breakfast classic. Good for mornings, brunch, or that “I need food before I make any more decisions” moment.",
+    mapQuery: "Gailey's Breakfast Cafe Springfield MO",
+    trackId: "map-gaileys",
+  },
+  {
+    name: "Lindberg's Tavern",
+    body: "C-Street tavern energy, food, drinks, live music, and history. Feels like Springfield in a way that is hard to fake.",
+    mapQuery: "Lindberg's Tavern Springfield MO",
+    trackId: "map-lindbergs",
+  },
+  {
+    name: "Mother's Brewing Company",
+    body: "Good local brewery stop, especially when the weather is decent. Springfield has a stronger brewery scene than people expect, and Mother's is one of the easy recommendations.",
+    mapQuery: "Mother's Brewing Company Springfield MO",
+    trackId: "map-mothers-brewing",
+  },
+  {
+    name: "1984 Arcade",
+    body: "Retro arcade, classic games, and a solid downtown side quest. Good recommendation when someone asks for something to do that is not just food or Bass Pro.",
+    mapQuery: "1984 Arcade Springfield MO",
+    trackId: "map-1984-arcade",
+  },
+  {
+    name: "Mizumoto Japanese Stroll Garden",
+    body: "A quieter Springfield pick. Good for walking, decompressing, and getting away from traffic noise for a bit. Not every recommendation needs to involve fried food or neon.",
+    mapQuery: "Mizumoto Japanese Stroll Garden Springfield MO",
+    trackId: "map-mizumoto-garden",
+  },
+];
+
+const mapsBase = "https://www.google.com/maps/search/?api=1&query=";
+---
+
+<div class="springfield" data-component="Springfield">
+  <p class="lead">
+    Not a sponsored guide. Not a tourist brochure. Just a few Springfield-area
+    spots I actually like, or would send someone to if they asked from the
+    back seat.
+  </p>
+
+  {
+    spots.map((spot) => (
+      <article class="spot">
+        <h3>{spot.name}</h3>
+        <p class="body">{spot.body}</p>
+        <UnderlinedLink
+          href={`${mapsBase}${encodeURIComponent(spot.mapQuery)}`}
+          external
+          accent
+          trackId={spot.trackId}
+        >
+          map
+        </UnderlinedLink>
+      </article>
+    ))
+  }
+  <div class="closer"></div>
+</div>
+
+<style>
+  .lead {
+    margin: 0 0 22px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--fg-dim);
+  }
+
+  .spot {
+    margin: 0;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .spot h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--fg);
+  }
+
+  .spot .body {
+    margin: 0 0 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--fg-dim);
+  }
+
+  .closer {
+    border-top: 1px solid var(--line);
+  }
+</style>

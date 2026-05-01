@@ -7,6 +7,7 @@ import Section from "../components/Section.astro";
 import Rule from "../components/Rule.astro";
 import MeetKevin from "../components/MeetKevin.astro";
 import MeetJeanLuc from "../components/MeetJeanLuc.astro";
+import Springfield from "../components/Springfield.astro";
 import WorkBuckets from "../components/WorkBuckets.astro";
 import DirectBooking from "../components/DirectBooking.astro";
 import Connect from "../components/Connect.astro";
@@ -40,7 +41,14 @@ const ogImage = new URL("og.jpg", Astro.site).toString();
   <Section index="02 / THE CAR · PICARD" title="Meet Jean-Luc" id="tesla">
     <MeetJeanLuc />
   </Section>
-  <Section index="03 / WORK" title="Work With Me" id="work">
+  <Section
+    index="03 / SPRINGFIELD"
+    title="Springfield favorites"
+    id="springfield"
+  >
+    <Springfield />
+  </Section>
+  <Section index="04 / WORK" title="Work With Me" id="work">
     <WorkBuckets />
   </Section>
   <Rule />
