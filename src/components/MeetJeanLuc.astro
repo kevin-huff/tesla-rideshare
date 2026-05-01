@@ -1,14 +1,44 @@
 ---
 import MonoLabel from "./atoms/MonoLabel.astro";
-import Photo from "./atoms/Photo.astro";
+import PhotoGallery from "./PhotoGallery.astro";
 import SpecGrid from "./meet-jean-luc/SpecGrid.astro";
 import Plate from "./meet-jean-luc/Plate.astro";
 import FAQ from "./meet-jean-luc/FAQ.astro";
 import ReferralCard from "./meet-jean-luc/ReferralCard.astro";
+
 import exterior from "../assets/tesla-exterior.jpg";
+import exteriorPrev from "../assets/tesla-exterior-prev.jpg";
+import chargePort from "../assets/tesla-charge-port.jpg";
+
 import interior from "../assets/tesla-interior.jpg";
+import interiorPrev from "../assets/tesla-interior-prev.jpg";
+import rearSeat from "../assets/tesla-rear-seat.jpg";
+
 import screen from "../assets/tesla-screen.jpg";
+import screenPrev from "../assets/tesla-screen-prev.jpg";
+import screenCharging from "../assets/tesla-screen-charging.jpg";
+import screenEnergyAlt from "../assets/tesla-screen-energy-alt.jpg";
+
 import platePhoto from "../assets/big-picard.png";
+
+const exteriorSlides = [
+  { src: exterior, alt: "The Tesla, three-quarter front." },
+  { src: exteriorPrev, alt: "The Tesla, alternate angle." },
+  { src: chargePort, alt: "Tesla charge port." },
+];
+
+const interiorSlides = [
+  { src: interior, alt: "Tesla interior, front." },
+  { src: interiorPrev, alt: "Tesla interior, alternate angle." },
+  { src: rearSeat, alt: "Tesla rear seat." },
+];
+
+const screenSlides = [
+  { src: screen, alt: "Tesla dashboard screen." },
+  { src: screenPrev, alt: "Tesla dashboard, alternate view." },
+  { src: screenCharging, alt: "Tesla screen showing charging status." },
+  { src: screenEnergyAlt, alt: "Tesla screen showing energy view." },
+];
 ---
 
 <div class="meet-jean-luc" data-component="MeetJeanLuc">
@@ -17,24 +47,27 @@ import platePhoto from "../assets/big-picard.png";
   </div>
 
   <div class="photos">
-    <Photo
-      src={exterior}
-      alt="The Tesla, three-quarter front view."
+    <PhotoGallery
+      slides={exteriorSlides}
+      label="exterior"
       widths={[400, 720]}
       sizes="(min-width: 720px) 720px, 100vw"
+      aspectRatio="21/9"
     />
     <div class="photos-row">
-      <Photo
-        src={interior}
-        alt="Tesla interior."
+      <PhotoGallery
+        slides={interiorSlides}
+        label="interior"
         widths={[200, 400]}
         sizes="(min-width: 720px) 360px, 50vw"
+        aspectRatio="21/9"
       />
-      <Photo
-        src={screen}
-        alt="Tesla dashboard screen."
+      <PhotoGallery
+        slides={screenSlides}
+        label="screen"
         widths={[200, 400]}
         sizes="(min-width: 720px) 360px, 50vw"
+        aspectRatio="21/9"
       />
     </div>
   </div>

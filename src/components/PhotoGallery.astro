@@ -1,0 +1,221 @@
+---
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+type Slide = {
+  src: ImageMetadata;
+  alt: string;
+};
+
+type Props = {
+  slides: Slide[];
+  /** Responsive variants Astro should generate (px). */
+  widths?: number[];
+  /** sizes attribute, paired with widths. */
+  sizes?: string;
+  /** Short label that appears in the cycle indicator (e.g., "exterior"). */
+  label?: string;
+  /** Eager-load the first slide. Use on the LCP element. */
+  eager?: boolean;
+  /** object-fit value when CSS overrides intrinsic dimensions. */
+  fit?: "cover" | "contain" | "fill" | "none" | "scale-down";
+  /** Force a CSS aspect-ratio on the gallery container (e.g., "21/9"). Prevents layout shift between slides of slightly different aspects. */
+  aspectRatio?: string;
+};
+
+const {
+  slides,
+  widths,
+  sizes,
+  label,
+  eager = false,
+  fit,
+  aspectRatio,
+}: Props = Astro.props;
+
+const total = slides.length;
+const totalLabel = String(total).padStart(2, "0");
+const useWidths = widths !== undefined;
+
+const containerStyle = [
+  aspectRatio ? `aspect-ratio: ${aspectRatio}` : "",
+  fit ? `--gallery-fit: ${fit}` : "",
+]
+  .filter(Boolean)
+  .join("; ");
+---
+
+<div
+  class="gallery"
+  data-gallery
+  style={containerStyle ? containerStyle : undefined}
+>
+  {
+    total > 1 ? (
+      <button
+        type="button"
+        class="cycle"
+        aria-label={
+          label ? `Cycle ${label} photos` : "Cycle through photos"
+        }
+      >
+        {slides.map((s, i) =>
+          useWidths ? (
+            <div class="slide" data-slide hidden={i !== 0}>
+              <Picture
+                src={s.src}
+                alt={s.alt}
+                widths={widths}
+                sizes={sizes}
+                loading={i === 0 && eager ? "eager" : "lazy"}
+                decoding={i === 0 && eager ? "sync" : "async"}
+                fetchpriority={i === 0 && eager ? "high" : "auto"}
+                formats={["avif", "webp"]}
+              />
+            </div>
+          ) : (
+            <div class="slide" data-slide hidden={i !== 0}>
+              <Picture
+                src={s.src}
+                alt={s.alt}
+                width={s.src.width}
+                height={s.src.height}
+                loading={i === 0 && eager ? "eager" : "lazy"}
+                decoding={i === 0 && eager ? "sync" : "async"}
+                fetchpriority={i === 0 && eager ? "high" : "auto"}
+                formats={["avif", "webp"]}
+              />
+            </div>
+          ),
+        )}
+      </button>
+    ) : useWidths ? (
+      <Picture
+        src={slides[0].src}
+        alt={slides[0].alt}
+        widths={widths}
+        sizes={sizes}
+        loading={eager ? "eager" : "lazy"}
+        decoding={eager ? "sync" : "async"}
+        fetchpriority={eager ? "high" : "auto"}
+        formats={["avif", "webp"]}
+      />
+    ) : (
+      <Picture
+        src={slides[0].src}
+        alt={slides[0].alt}
+        width={slides[0].src.width}
+        height={slides[0].src.height}
+        loading={eager ? "eager" : "lazy"}
+        decoding={eager ? "sync" : "async"}
+        fetchpriority={eager ? "high" : "auto"}
+        formats={["avif", "webp"]}
+      />
+    )
+  }
+  {
+    total > 1 && (
+      <div class="indicator" aria-hidden="true">
+        <span class="counter" data-indicator>
+          01 / {totalLabel}
+        </span>
+        {label && <span class="label-text">{label}</span>}
+      </div>
+    )
+  }
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-gallery]").forEach((el) => {
+    const button = el.querySelector<HTMLButtonElement>("button.cycle");
+    if (!button) return;
+    const slides = Array.from(
+      el.querySelectorAll<HTMLElement>("[data-slide]"),
+    );
+    if (slides.length < 2) return;
+    const indicator = el.querySelector<HTMLElement>("[data-indicator]");
+    const total = slides.length;
+    const totalLabel = String(total).padStart(2, "0");
+
+    let i = 0;
+    button.addEventListener("click", () => {
+      slides[i].hidden = true;
+      i = (i + 1) % total;
+      slides[i].hidden = false;
+      if (indicator) {
+        indicator.textContent = `${String(i + 1).padStart(2, "0")} / ${totalLabel}`;
+      }
+    });
+  });
+</script>
+
+<style>
+  .gallery {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--bg2);
+  }
+
+  .cycle {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .cycle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+
+  .slide {
+    width: 100%;
+    height: 100%;
+  }
+
+  .gallery :global(picture),
+  .gallery :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: var(--gallery-fit, cover);
+  }
+
+  .indicator {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    background: rgba(11, 11, 13, 0.72);
+    color: var(--fg);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+  }
+
+  .indicator .label-text {
+    color: var(--fg-mute);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .gallery :global(img) {
+      transition: opacity 0.15s ease;
+    }
+  }
+</style>
