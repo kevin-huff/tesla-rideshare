@@ -1,0 +1,21 @@
+---
+import MonoLabel from "./atoms/MonoLabel.astro";
+
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <MonoLabel>© {year} kevin · springfield mo</MonoLabel>
+  <MonoLabel>built by kevin</MonoLabel>
+</footer>
+
+<style>
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 22px 36px;
+    max-width: var(--max-content);
+    margin: 0 auto;
+  }
+</style>

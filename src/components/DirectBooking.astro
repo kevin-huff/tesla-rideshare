@@ -1,0 +1,48 @@
+---
+import MonoLabel from "./atoms/MonoLabel.astro";
+import UnderlinedLink from "./atoms/UnderlinedLink.astro";
+---
+
+<section class="direct-booking">
+  <div class="kicker">
+    <MonoLabel>off-app · for repeat passengers</MonoLabel>
+  </div>
+  <h3 class="headline">Already know me?</h3>
+  <p class="lead">
+    You can book me directly for airport runs, events, and longer trips.
+  </p>
+  <UnderlinedLink
+    href="mailto:kevin@kevnet.cloud"
+    accent
+    trackId="email-direct"
+  >
+    email to set it up
+  </UnderlinedLink>
+</section>
+
+<style>
+  .direct-booking {
+    padding: 32px 22px;
+    max-width: var(--max-content);
+    margin: 0 auto;
+  }
+
+  .kicker {
+    margin-bottom: 8px;
+  }
+
+  .headline {
+    margin: 0 0 8px;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+  }
+
+  .lead {
+    margin: 0 0 12px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--fg-dim);
+  }
+</style>
