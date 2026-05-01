@@ -55,6 +55,7 @@ const containerStyle = [
       <button
         type="button"
         class="cycle"
+        data-cycle
         aria-label={
           label ? `Cycle ${label} photos` : "Cycle through photos"
         }
@@ -113,6 +114,29 @@ const containerStyle = [
       />
     )
   }
+
+  <button
+    type="button"
+    class="expand"
+    data-expand
+    aria-label={label ? `Expand ${label} photo` : "Expand photo"}
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="15 3 21 3 21 9"></polyline>
+      <polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line>
+      <line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg>
+  </button>
+
   {
     total > 1 && (
       <div class="indicator" aria-hidden="true">
@@ -125,26 +149,102 @@ const containerStyle = [
   }
 </div>
 
+<dialog class="lightbox" data-lightbox aria-label={label ? `${label} photos, expanded` : "Expanded photos"}>
+  <div class="lightbox-stage">
+    {
+      slides.map((s, i) => (
+        <div class="lightbox-slide" data-lightbox-slide hidden={i !== 0}>
+          <Picture
+            src={s.src}
+            alt={s.alt}
+            widths={[1200]}
+            sizes="100vw"
+            loading="lazy"
+            decoding="async"
+            formats={["avif", "webp"]}
+          />
+        </div>
+      ))
+    }
+  </div>
+  <div class="lightbox-bar">
+    {
+      total > 1 && (
+        <>
+          <button type="button" class="lb-nav" data-lb-prev aria-label="Previous photo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span class="lb-indicator" data-lb-indicator>
+            01 / {totalLabel}
+          </span>
+          <button type="button" class="lb-nav" data-lb-next aria-label="Next photo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </>
+      )
+    }
+    <button type="button" class="lb-close" data-lb-close aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+</dialog>
+
 <script>
+  const pad = (n: number) => String(n).padStart(2, "0");
+
   document.querySelectorAll<HTMLElement>("[data-gallery]").forEach((el) => {
-    const button = el.querySelector<HTMLButtonElement>("button.cycle");
-    if (!button) return;
     const slides = Array.from(
       el.querySelectorAll<HTMLElement>("[data-slide]"),
     );
-    if (slides.length < 2) return;
     const indicator = el.querySelector<HTMLElement>("[data-indicator]");
-    const total = slides.length;
-    const totalLabel = String(total).padStart(2, "0");
+    const expandBtn = el.querySelector<HTMLButtonElement>("[data-expand]");
+    const cycleBtn = el.querySelector<HTMLButtonElement>("[data-cycle]");
+
+    const lightbox = el.querySelector<HTMLDialogElement>("[data-lightbox]");
+    const lbSlides = Array.from(
+      lightbox?.querySelectorAll<HTMLElement>("[data-lightbox-slide]") ?? [],
+    );
+    const lbIndicator = lightbox?.querySelector<HTMLElement>("[data-lb-indicator]");
+    const lbPrev = lightbox?.querySelector<HTMLButtonElement>("[data-lb-prev]");
+    const lbNext = lightbox?.querySelector<HTMLButtonElement>("[data-lb-next]");
+    const lbClose = lightbox?.querySelector<HTMLButtonElement>("[data-lb-close]");
+
+    const total = slides.length || lbSlides.length;
+    if (total === 0) return;
 
     let i = 0;
-    button.addEventListener("click", () => {
-      slides[i].hidden = true;
-      i = (i + 1) % total;
-      slides[i].hidden = false;
-      if (indicator) {
-        indicator.textContent = `${String(i + 1).padStart(2, "0")} / ${totalLabel}`;
-      }
+
+    const showSlide = (next: number) => {
+      i = ((next % total) + total) % total;
+      slides.forEach((s, idx) => (s.hidden = idx !== i));
+      lbSlides.forEach((s, idx) => (s.hidden = idx !== i));
+      const text = `${pad(i + 1)} / ${pad(total)}`;
+      if (indicator) indicator.textContent = text;
+      if (lbIndicator) lbIndicator.textContent = text;
+    };
+
+    cycleBtn?.addEventListener("click", () => showSlide(i + 1));
+
+    expandBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      lightbox?.showModal();
+    });
+
+    lbClose?.addEventListener("click", () => lightbox?.close());
+    lbPrev?.addEventListener("click", () => showSlide(i - 1));
+    lbNext?.addEventListener("click", () => showSlide(i + 1));
+
+    // Click on the dark backdrop closes the dialog. Clicks on the
+    // dialog content fall through to their own handlers.
+    lightbox?.addEventListener("click", (e) => {
+      if (e.target === lightbox) lightbox.close();
+    });
+
+    // Arrow keys navigate inside the lightbox.
+    lightbox?.addEventListener("keydown", (e) => {
+      if (total < 2) return;
+      if (e.key === "ArrowLeft") showSlide(i - 1);
+      else if (e.key === "ArrowRight") showSlide(i + 1);
     });
   });
 </script>
@@ -183,7 +283,7 @@ const containerStyle = [
   }
 
   .gallery :global(picture),
-  .gallery :global(img) {
+  .gallery :global(picture > img) {
     display: block;
     width: 100%;
     height: 100%;
@@ -213,8 +313,142 @@ const containerStyle = [
     color: var(--fg-mute);
   }
 
+  /* Expand button: fixed 44x44 hit area in the bottom-left so
+     it doesn't compete with the indicator pill in the bottom-right. */
+  .expand {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(11, 11, 13, 0.72);
+    color: var(--fg);
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .expand::before {
+    /* extend the touch target to 44px without growing the visible button */
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+
+  .expand svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .expand:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Lightbox dialog */
+  .lightbox {
+    width: 100%;
+    max-width: min(95vw, 1400px);
+    max-height: 95vh;
+    margin: auto;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .lightbox::backdrop {
+    background: rgba(11, 11, 13, 0.85);
+    backdrop-filter: blur(2px);
+  }
+
+  .lightbox-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    min-height: 240px;
+    max-height: calc(95vh - 56px);
+  }
+
+  .lightbox-slide {
+    width: 100%;
+    max-height: calc(95vh - 56px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-slide :global(picture),
+  .lightbox-slide :global(picture > img) {
+    display: block;
+    max-width: 100%;
+    max-height: calc(95vh - 56px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .lightbox-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px;
+    border-top: 1px solid var(--line);
+    background: var(--bg2);
+  }
+
+  .lb-nav,
+  .lb-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 12px;
+    background: none;
+    border: 0;
+    color: var(--fg);
+    font: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .lb-close {
+    margin-left: auto;
+  }
+
+  .lb-nav svg,
+  .lb-close svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .lb-indicator {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-mute);
+  }
+
+  .lb-nav:focus-visible,
+  .lb-close:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+
   @media (prefers-reduced-motion: no-preference) {
-    .gallery :global(img) {
+    .gallery :global(picture > img) {
       transition: opacity 0.15s ease;
     }
   }
