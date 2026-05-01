@@ -1,8 +1,9 @@
 ---
 import LiveDot from "../atoms/LiveDot.astro";
 import MonoLabel from "../atoms/MonoLabel.astro";
-import PhotoPlaceholder from "../atoms/PhotoPlaceholder.astro";
+import Photo from "../atoms/Photo.astro";
 import FollowButton from "./FollowButton.astro";
+import banner from "../../assets/channel-banner.jpg";
 
 type ScheduleRow = { day: string; time: string; title: string };
 
@@ -27,8 +28,12 @@ const {
 ---
 
 <article class="channel-card">
-  {/* TODO(launch): swap for <Photo> with the real Twitch channel banner (16:6). */}
-  <PhotoPlaceholder caption="CHANNEL ART · 16:6" height={120} radius={0} />
+  <Photo
+    src={banner}
+    alt="The Kevin Show channel banner."
+    widths={[400, 720]}
+    sizes="(min-width: 720px) 720px, 100vw"
+  />
 
   <div class="body">
     <div class="row">

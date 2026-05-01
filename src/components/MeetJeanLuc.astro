@@ -1,10 +1,60 @@
 ---
 import MonoLabel from "./atoms/MonoLabel.astro";
-import PhotoPlaceholder from "./atoms/PhotoPlaceholder.astro";
+import PhotoGallery from "./PhotoGallery.astro";
 import SpecGrid from "./meet-jean-luc/SpecGrid.astro";
 import Plate from "./meet-jean-luc/Plate.astro";
 import FAQ from "./meet-jean-luc/FAQ.astro";
 import ReferralCard from "./meet-jean-luc/ReferralCard.astro";
+
+import exterior from "../assets/tesla-exterior.jpg";
+import exteriorPrev from "../assets/tesla-exterior-prev.jpg";
+import chargePort from "../assets/tesla-charge-port.jpg";
+import visorUber from "../assets/visor-uber.jpg";
+import visorLyft from "../assets/visor-lyft.jpg";
+import extNew1 from "../assets/ext-new-1.jpg";
+import extNew2 from "../assets/ext-new-2.jpg";
+import extNew3 from "../assets/ext-new-3.jpg";
+
+import interior from "../assets/tesla-interior.jpg";
+import interiorPrev from "../assets/tesla-interior-prev.jpg";
+import rearSeat from "../assets/tesla-rear-seat.jpg";
+import interiorNew1 from "../assets/interior-new-1.jpg";
+import interiorNew2 from "../assets/interior-new-2.jpg";
+import interiorNew3 from "../assets/interior-new-3.jpg";
+
+import screen from "../assets/tesla-screen.jpg";
+import screenCharging from "../assets/tesla-screen-charging.jpg";
+import screenFsd from "../assets/tesla-screen-fsd.jpg";
+import screenNew1 from "../assets/screen-new-1.jpg";
+
+import platePhoto from "../assets/big-picard.png";
+
+const exteriorSlides = [
+  { src: exterior, alt: "The Tesla, three-quarter front." },
+  { src: exteriorPrev, alt: "The Tesla, alternate angle." },
+  { src: extNew1, alt: "The Tesla, exterior detail." },
+  { src: extNew2, alt: "The Tesla, exterior detail." },
+  { src: extNew3, alt: "The Tesla, exterior detail." },
+  { src: chargePort, alt: "Tesla charge port." },
+  { src: visorUber, alt: "Uber sticker on the sun visor." },
+  { src: visorLyft, alt: "Lyft sticker on the sun visor." },
+];
+
+const interiorSlides = [
+  { src: interior, alt: "Tesla interior, front." },
+  { src: interiorPrev, alt: "Tesla interior, alternate angle." },
+  { src: interiorNew1, alt: "Tesla interior detail." },
+  { src: interiorNew2, alt: "Tesla interior detail." },
+  { src: interiorNew3, alt: "Tesla interior detail." },
+  { src: rearSeat, alt: "Tesla rear seat." },
+];
+
+const screenSlides = [
+  { src: screen, alt: "Tesla dashboard screen." },
+  { src: screenCharging, alt: "Tesla screen showing charging status." },
+  { src: screenFsd, alt: "Tesla screen with autopilot active." },
+  { src: screenNew1, alt: "Tesla screen detail." },
+];
 ---
 
 <div class="meet-jean-luc" data-component="MeetJeanLuc">
@@ -13,19 +63,35 @@ import ReferralCard from "./meet-jean-luc/ReferralCard.astro";
   </div>
 
   <div class="photos">
-    {/* TODO(launch): swap all three for <Photo> with real shots — exterior
-        three-quarter front, interior, dashboard screen close-up. */}
-    <PhotoPlaceholder caption="EXTERIOR · 3/4 FRONT" height={210} />
+    <PhotoGallery
+      slides={exteriorSlides}
+      label="exterior"
+      widths={[400, 720]}
+      sizes="(min-width: 720px) 720px, 100vw"
+      aspectRatio="21/9"
+    />
     <div class="photos-row">
-      <PhotoPlaceholder caption="INTERIOR" height={120} />
-      <PhotoPlaceholder caption="SCREEN" height={120} />
+      <PhotoGallery
+        slides={interiorSlides}
+        label="interior"
+        widths={[200, 400]}
+        sizes="(min-width: 720px) 360px, 50vw"
+        aspectRatio="21/9"
+      />
+      <PhotoGallery
+        slides={screenSlides}
+        label="screen"
+        widths={[200, 400]}
+        sizes="(min-width: 720px) 360px, 50vw"
+        aspectRatio="21/9"
+      />
     </div>
   </div>
 
   <SpecGrid />
 
   <div class="plate">
-    <Plate />
+    <Plate photo={platePhoto} />
   </div>
 
   <FAQ />

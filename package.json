@@ -15,7 +15,8 @@
     "format": "prettier --write \"src/**/*.{astro,ts,css}\""
   },
   "dependencies": {
-    "astro": "^6.2.0"
+    "astro": "^6.2.0",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
@@ -35,6 +36,12 @@
           "parser": "astro"
         }
       }
+    ]
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
     ]
   }
 }
