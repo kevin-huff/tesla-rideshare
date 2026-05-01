@@ -21,6 +21,9 @@ import PhotoPlaceholder from "../components/atoms/PhotoPlaceholder.astro";
 >
   <TopNav />
   <Hero>
+    {/* TODO(launch): swap for <Photo eager> with the real hero (Kevin + Tesla,
+        landscape, 4:5 mobile / 16:9 desktop, golden hour). Add a matching
+        <link rel="preload" as="image"> via Page's head slot for LCP. */}
     <PhotoPlaceholder
       slot="photo"
       caption="HERO · KEVIN + MODEL Y"
