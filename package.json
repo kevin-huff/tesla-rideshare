@@ -19,16 +19,21 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
+    "@astrojs/sitemap": "^3.7.2",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^5.7.2"
   },
   "prettier": {
-    "plugins": ["prettier-plugin-astro"],
+    "plugins": [
+      "prettier-plugin-astro"
+    ],
     "overrides": [
       {
         "files": "*.astro",
-        "options": { "parser": "astro" }
+        "options": {
+          "parser": "astro"
+        }
       }
     ]
   }

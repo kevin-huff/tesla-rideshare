@@ -4,9 +4,51 @@ import "../styles/global.css";
 type Props = {
   title?: string;
   description?: string;
+  /** Absolute URL for OG / Twitter card image. Skipped when omitted. */
+  image?: string;
+  /** When true, adds <meta name="robots" content="noindex">. Used on 404. */
+  noindex?: boolean;
 };
 
-const { title = "ride.kevnet.cloud", description } = Astro.props;
+const {
+  title = "ride.kevnet.cloud",
+  description,
+  image,
+  noindex = false,
+}: Props = Astro.props;
+
+const canonical = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).toString()
+  : Astro.url.pathname;
+
+const isHome = Astro.url.pathname === "/";
+
+// Person schema, only on the home page (the page is the canonical entity).
+const personJsonLd = isHome
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: "Kevin Huff",
+      url: "https://ride.kevnet.cloud",
+      jobTitle: "Director of Technology",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Springfield",
+        addressRegion: "MO",
+        addressCountry: "US",
+      },
+      sameAs: [
+        "https://www.linkedin.com/in/mrhuff/",
+        "https://github.com/kevin-huff",
+        "https://twitch.tv/ZilchGnu",
+      ],
+    }
+  : null;
+
+// Cloudflare Web Analytics token. Set as PUBLIC_CF_ANALYTICS_TOKEN in
+// Cloudflare Pages env vars (it is public-by-design — embedded in the
+// beacon URL). When unset, the beacon does not ship.
+const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 ---
 
 <!doctype html>
@@ -19,9 +61,52 @@ const { title = "ride.kevnet.cloud", description } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark" />
+
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ride.kevnet.cloud" />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    {image && <meta property="og:image" content={image} />}
+
+    <meta
+      name="twitter:card"
+      content={image ? "summary_large_image" : "summary"}
+    />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    {image && <meta name="twitter:image" content={image} />}
+
+    {
+      personJsonLd && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(personJsonLd)}
+        />
+      )
+    }
+
     <slot name="head" />
+
+    {
+      cfAnalyticsToken && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: cfAnalyticsToken })}
+        />
+      )
+    }
   </head>
   <body>
     <slot />

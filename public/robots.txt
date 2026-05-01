@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ride.kevnet.cloud/sitemap-index.xml
