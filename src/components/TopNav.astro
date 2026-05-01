@@ -6,20 +6,36 @@ type Props = {
   pulse?: boolean;
 };
 
-const { live = false, pulse = false }: Props = Astro.props;
+// Default `live` is false — SSR renders the indicator hidden. The JS
+// island below fetches /api/live and unhides it when streaming.
+// `pulse` defaults to true since the indicator is meant to pulse when
+// it shows; pass pulse={false} to override.
+const { live = false, pulse = true }: Props = Astro.props;
 ---
 
 <header data-component="TopNav">
   <span class="brand">kevnet.cloud / ride</span>
-  {
-    live && (
-      <span class="indicator">
-        <span class="live-label">live</span>
-        <LiveDot pulse={pulse} />
-      </span>
-    )
-  }
+  <span class="indicator" id="live-indicator" hidden={!live}>
+    <span class="live-label">live</span>
+    <LiveDot pulse={pulse} />
+  </span>
 </header>
+
+<script>
+  // Fetch /api/live after first paint and unhide the indicator if the
+  // channel is streaming. Edge-cached 60s so we're not hammering Twitch.
+  // Fails silently — if anything goes wrong, the indicator stays hidden.
+  (async () => {
+    try {
+      const res = await fetch("/api/live");
+      if (!res.ok) return;
+      const data = (await res.json()) as { live: boolean };
+      if (data.live) {
+        document.getElementById("live-indicator")?.removeAttribute("hidden");
+      }
+    } catch {}
+  })();
+</script>
 
 <style>
   header {
@@ -43,6 +59,14 @@ const { live = false, pulse = false }: Props = Astro.props;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+  }
+
+  /* Author rule for display: inline-flex above outranks the
+     user-agent [hidden] { display: none }, so reassert it scoped
+     to the indicator. JS removes the attribute when /api/live
+     reports streaming. */
+  .indicator[hidden] {
+    display: none;
   }
 
   .live-label {
