@@ -1,23 +1,16 @@
 ---
 import { Picture } from "astro:assets";
 import type { ImageMetadata } from "astro";
-import MonoLabel from "../atoms/MonoLabel.astro";
 
 type Props = {
   /** Plate photo. Required — this component IS the plate visual now. */
   photo: ImageMetadata;
   /** Plate text, used for the alt label. */
   text?: string;
-  caption?: string;
   photoAlt?: string;
 };
 
-const {
-  photo,
-  text = "PICARD",
-  caption = "missouri · 2023",
-  photoAlt,
-}: Props = Astro.props;
+const { photo, text = "PICARD", photoAlt }: Props = Astro.props;
 
 const finalPhotoAlt = photoAlt ?? `License plate: ${text}.`;
 
@@ -37,20 +30,17 @@ const photoHeight = Math.round((photoWidth * photo.height) / photo.width);
     decoding="async"
     formats={["avif", "webp"]}
   />
-  <MonoLabel>{caption}</MonoLabel>
 </div>
 
 <style>
   .plate-row {
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
   }
 
   .plate-row :global(.plate-photo) {
     width: 200px;
     height: auto;
-    flex-shrink: 0;
   }
 </style>
