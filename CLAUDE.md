@@ -13,7 +13,13 @@ Astro 6, static output, vanilla CSS. Node LTS via `.nvmrc`. pnpm.
 - `pnpm check` — `astro check` (TypeScript + Astro diagnostics)
 - `pnpm format` — Prettier with the Astro plugin
 
-The foundation step has shipped: tokens, base shell (`Page`, `Section`, `Rule`), atoms (`MonoLabel`, `UnderlinedLink`, `Chip`, `Photo`, `PhotoPlaceholder`), and a smoke-test `index.astro`. Real sections (TopNav, Hero, JumpTiles, etc.) come next.
+## Deploy env vars (Cloudflare Pages)
+
+Set in **Settings → Environment variables**, for **Production AND Preview**:
+
+- `TWITCH_CLIENT_ID` — plaintext. From dev.twitch.tv app.
+- `TWITCH_CLIENT_SECRET` — **encrypted**. From dev.twitch.tv app. Required for the `/api/live` Pages Function. Without these, `/api/live` returns `{ live: false }` and the top-nav indicator stays hidden.
+- `PUBLIC_CF_ANALYTICS_TOKEN` — plaintext. From the Cloudflare Pages → Web Analytics tab once enabled. Without this, the analytics beacon does not ship and no events are recorded. The token is public-by-design (`PUBLIC_` prefix is intentional — Astro requires it to expose the value at build time).
 
 ## The planning bundle (read order)
 
