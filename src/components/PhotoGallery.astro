@@ -371,8 +371,12 @@ const containerStyle = [
     outline-offset: 2px;
   }
 
-  /* Lightbox dialog — fullscreen modal so the popout image is
-     meaningfully larger than the inline gallery, not smaller.
+  /* Lightbox dialog. Layout properties (size + flex) are scoped to
+     [open] so the closed state inherits the UA `dialog { display:
+     none }`. Without the [open] guard, our `display: flex` on the
+     base rule would beat the UA rule and the dialog would be
+     visible at all times.
+
      position: fixed + inset: 0 overrides the UA default
      position: absolute, which would position the dialog relative
      to the .gallery (because .gallery is position: relative) and
@@ -380,12 +384,6 @@ const containerStyle = [
      offset. fixed pins the dialog to the viewport regardless of
      where it sits in the DOM. */
   .lightbox {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    max-width: 100vw;
-    max-height: 100vh;
     margin: 0;
     padding: 0;
     background: var(--bg);
@@ -393,6 +391,15 @@ const containerStyle = [
     border: 0;
     border-radius: 0;
     overflow: hidden;
+  }
+
+  .lightbox[open] {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
   }
