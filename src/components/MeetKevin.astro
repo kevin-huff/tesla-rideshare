@@ -2,7 +2,8 @@
 import MonoLabel from "./atoms/MonoLabel.astro";
 import Chip from "./atoms/Chip.astro";
 import UnderlinedLink from "./atoms/UnderlinedLink.astro";
-import PhotoPlaceholder from "./atoms/PhotoPlaceholder.astro";
+import Photo from "./atoms/Photo.astro";
+import headshot from "../assets/headshot.jpg";
 
 const interests = [
   "Drupal",
@@ -17,8 +18,14 @@ const interests = [
 <div class="meet-kevin" data-component="MeetKevin">
   <div class="row">
     <div class="headshot">
-      {/* TODO(launch): swap for <Photo> with Kevin's real headshot (88×88 square). */}
-      <PhotoPlaceholder caption="HEADSHOT" width={88} height={88} radius={6} />
+      <Photo
+        src={headshot}
+        alt="Kevin Huff."
+        width={88}
+        height={88}
+        densities={[1, 2, 3]}
+        fit="cover"
+      />
     </div>
     <p class="bio">
       I run technology for a federal contractor by day. Off the clock I drive my Tesla, stream on Twitch, and tinker with whatever caught my eye that week.
@@ -54,6 +61,12 @@ const interests = [
   .headshot {
     flex-shrink: 0;
     width: 88px;
+  }
+
+  .headshot :global(img) {
+    width: 88px;
+    height: 88px;
+    border-radius: 6px;
   }
 
   .bio {

@@ -6,26 +6,68 @@ import MonoLabel from "./MonoLabel.astro";
 type Props = {
   src: ImageMetadata;
   alt: string;
-  width: number;
-  height: number;
+  /** Intrinsic display width. Defaults to source width. */
+  width?: number;
+  /** Intrinsic display height. Defaults to source height. */
+  height?: number;
+  /** Responsive variants Astro should generate (px). Mutually exclusive with width/height. */
+  widths?: number[];
+  /** sizes attribute, paired with widths. */
+  sizes?: string;
+  /** Pixel densities Astro should generate for hi-DPI (e.g., [1, 2]). */
+  densities?: number[];
+  /** Box-model fit when CSS overrides intrinsic dimensions. */
+  fit?: "cover" | "contain" | "fill" | "none" | "scale-down";
   eager?: boolean;
   caption?: string;
 };
 
-const { src, alt, width, height, eager = false, caption } = Astro.props;
+const {
+  src,
+  alt,
+  width,
+  height,
+  widths,
+  sizes,
+  densities,
+  fit,
+  eager = false,
+  caption,
+}: Props = Astro.props;
+
+const loading = eager ? "eager" : "lazy";
+const decoding = eager ? "sync" : "async";
+const fetchpriority = eager ? "high" : "auto";
+const formats = ["avif", "webp"] as const;
 ---
 
-<figure class="photo">
-  <Picture
-    src={src}
-    alt={alt}
-    width={width}
-    height={height}
-    loading={eager ? "eager" : "lazy"}
-    decoding={eager ? "sync" : "async"}
-    fetchpriority={eager ? "high" : "auto"}
-    formats={["avif", "webp"]}
-  />
+<figure class="photo" style={fit ? `--photo-fit:${fit}` : undefined}>
+  {
+    widths ? (
+      <Picture
+        src={src}
+        alt={alt}
+        widths={widths}
+        sizes={sizes}
+        loading={loading}
+        decoding={decoding}
+        fetchpriority={fetchpriority}
+        formats={formats as unknown as ("avif" | "webp")[]}
+      />
+    ) : (
+      <Picture
+        src={src}
+        alt={alt}
+        width={width ?? src.width}
+        height={height ?? src.height}
+        densities={densities}
+        loading={loading}
+        decoding={decoding}
+        fetchpriority={fetchpriority}
+        formats={formats as unknown as ("avif" | "webp")[]}
+      />
+    )
+  }
   {
     caption && (
       <figcaption>
@@ -38,6 +80,12 @@ const { src, alt, width, height, eager = false, caption } = Astro.props;
 <style>
   .photo {
     margin: 0;
+  }
+
+  .photo :global(img) {
+    width: 100%;
+    height: auto;
+    object-fit: var(--photo-fit, initial);
   }
 
   figcaption {

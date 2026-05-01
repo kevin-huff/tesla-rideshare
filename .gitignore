@@ -22,3 +22,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# raw image originals — local-only; processed copies live in src/assets/
+source images/
+
+# Windows ADS artifacts (zone identifiers from cross-OS file copies)
+*:Zone.Identifier
