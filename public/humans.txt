@@ -7,7 +7,6 @@ contact: kevin@kevnet.cloud
 
 github:  github.com/kevin-huff
 linkedin: linkedin.com/in/mrhuff
-twitch:  twitch.tv/ZilchGnu
 
 stack:   astro, vanilla css, cloudflare pages
 fonts:   system stack only
