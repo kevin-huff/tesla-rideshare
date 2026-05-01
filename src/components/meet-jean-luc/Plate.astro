@@ -4,46 +4,39 @@ import type { ImageMetadata } from "astro";
 import MonoLabel from "../atoms/MonoLabel.astro";
 
 type Props = {
+  /** Plate photo. Required — this component IS the plate visual now. */
+  photo: ImageMetadata;
+  /** Plate text, used for the alt label. */
   text?: string;
   caption?: string;
-  /** Optional inline plate photo. Per DESIGN_GUIDELINES §6: "80–120px detail — nothing larger." */
-  photo?: ImageMetadata;
   photoAlt?: string;
 };
 
 const {
+  photo,
   text = "PICARD",
   caption = "missouri · 2023",
-  photo,
   photoAlt,
 }: Props = Astro.props;
 
-const finalPhotoAlt = photoAlt ?? `License plate detail: ${text}.`;
+const finalPhotoAlt = photoAlt ?? `License plate: ${text}.`;
 
-// Render the photo at 120px wide max — design spec is 80-120px.
-// Height derives from the source aspect.
-const photoWidth = 120;
-const photoHeight = photo
-  ? Math.round((photoWidth * photo.height) / photo.width)
-  : undefined;
+// Render at 200px wide; height derives from the source aspect.
+const photoWidth = 200;
+const photoHeight = Math.round((photoWidth * photo.height) / photo.width);
 ---
 
 <div class="plate-row">
-  {
-    photo && (
-      <Picture
-        class="plate-photo"
-        src={photo}
-        alt={finalPhotoAlt}
-        width={photoWidth}
-        height={photoHeight}
-        loading="lazy"
-        decoding="async"
-        formats={["avif", "webp"]}
-      />
-    )
-  }
-  <span class="plate" aria-label={`License plate: ${text}`}>{text}</span>
+  <Picture
+    class="plate-photo"
+    src={photo}
+    alt={finalPhotoAlt}
+    width={photoWidth}
+    height={photoHeight}
+    loading="lazy"
+    decoding="async"
+    formats={["avif", "webp"]}
+  />
   <MonoLabel>{caption}</MonoLabel>
 </div>
 
@@ -56,28 +49,8 @@ const photoHeight = photo
   }
 
   .plate-row :global(.plate-photo) {
-    width: 120px;
+    width: 200px;
     height: auto;
-    border-radius: 4px;
     flex-shrink: 0;
-  }
-
-  .plate {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 110px;
-    padding: 4px 10px 5px;
-    background: #f4efe1;
-    color: #1a1816;
-    font-family: var(--font-mono);
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 0.18em;
-    border-radius: 3px;
-    border: 1px solid rgba(0, 0, 0, 0.25);
-    box-shadow:
-      inset 0 0 0 2px #f4efe1,
-      inset 0 0 0 3px rgba(0, 0, 0, 0.12);
   }
 </style>
