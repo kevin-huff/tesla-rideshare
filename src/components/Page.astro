@@ -36,5 +36,41 @@ const { title = "ride.kevnet.cloud", description } = Astro.props;
         "color:#7dd3fc;font-family:ui-monospace,SF Mono,Menlo,Monaco,monospace",
       );
     </script>
+    <script>
+      // easter egg: Konami code unlocks dev-mode overlay (DESIGN_GUIDELINES §11)
+      const seq = [
+        "ArrowUp",
+        "ArrowUp",
+        "ArrowDown",
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowLeft",
+        "ArrowRight",
+        "b",
+        "a",
+      ];
+      let buf: string[] = [];
+      addEventListener("keydown", (e) => {
+        const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        buf.push(k);
+        if (buf.length > seq.length) buf.shift();
+        if (
+          buf.length === seq.length &&
+          buf.every((x, i) => x === seq[i])
+        ) {
+          const on = document.body.toggleAttribute("data-dev-mode");
+          try {
+            sessionStorage.setItem("d", on ? "1" : "0");
+          } catch {}
+          buf = [];
+        }
+      });
+      try {
+        if (sessionStorage.getItem("d") === "1") {
+          document.body.setAttribute("data-dev-mode", "");
+        }
+      } catch {}
+    </script>
   </body>
 </html>

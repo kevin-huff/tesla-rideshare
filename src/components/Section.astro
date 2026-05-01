@@ -13,7 +13,7 @@ const { index, title, id, first = false } = Astro.props;
 ---
 
 {!first && <Rule />}
-<section id={id}>
+<section id={id} data-component="Section">
   <div class="index">
     <MonoLabel>{index}</MonoLabel>
   </div>

@@ -9,7 +9,7 @@ type Props = {
 const { live = false, pulse = false }: Props = Astro.props;
 ---
 
-<header>
+<header data-component="TopNav">
   <span class="brand">kevnet.cloud / ride</span>
   {
     live && (
