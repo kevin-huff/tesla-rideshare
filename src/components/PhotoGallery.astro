@@ -153,14 +153,13 @@ const containerStyle = [
     {
       slides.map((s, i) => (
         <div class="lightbox-slide" data-lightbox-slide hidden={i !== 0}>
-          <Picture
-            src={s.src}
+          <img
+            src={s.src.src}
             alt={s.alt}
-            widths={[1200, 1800, 2400]}
-            sizes="100vw"
+            width={s.src.width}
+            height={s.src.height}
             loading="lazy"
             decoding="async"
-            formats={["avif", "webp"]}
           />
         </div>
       ))
@@ -256,10 +255,12 @@ const containerStyle = [
     });
     lbPrev?.addEventListener("click", (e) => {
       e.stopPropagation();
+      e.preventDefault();
       showSlide(i - 1);
     });
     lbNext?.addEventListener("click", (e) => {
       e.stopPropagation();
+      e.preventDefault();
       showSlide(i + 1);
     });
 
