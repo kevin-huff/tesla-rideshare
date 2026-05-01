@@ -1,0 +1,46 @@
+---
+import Page from "../components/Page.astro";
+import MonoLabel from "../components/atoms/MonoLabel.astro";
+import UnderlinedLink from "../components/atoms/UnderlinedLink.astro";
+---
+
+<Page
+  title="404 · ride.kevnet.cloud"
+  description="Captain, that page does not exist."
+>
+  <main class="not-found">
+    <div class="kicker">
+      <MonoLabel>ERR · 404</MonoLabel>
+    </div>
+    <h1>Captain, that page does not exist.</h1>
+    <p class="back">
+      <UnderlinedLink href="/" internal accent>back to home</UnderlinedLink>
+    </p>
+  </main>
+</Page>
+
+<style>
+  .not-found {
+    padding: 80px 22px;
+    max-width: var(--max-content);
+    margin: 0 auto;
+  }
+
+  .kicker {
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    margin: 0 0 22px;
+    font-size: 46px;
+    line-height: 0.96;
+    font-weight: 600;
+    letter-spacing: -0.038em;
+    color: var(--fg);
+    text-wrap: balance;
+  }
+
+  .back {
+    margin: 0;
+  }
+</style>

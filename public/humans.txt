@@ -1,0 +1,19 @@
+hi.
+
+site:    ride.kevnet.cloud
+made by: kevin huff
+where:   springfield, mo
+contact: kevin@kevnet.cloud
+
+github:  github.com/kevin-huff
+linkedin: linkedin.com/in/mrhuff
+twitch:  twitch.tv/ZilchGnu
+
+stack:   astro, vanilla css, cloudflare pages
+fonts:   system stack only
+analytics: cloudflare web analytics, cookieless
+
+the tesla is named jean-luc.
+make it so.
+
+# kevin
