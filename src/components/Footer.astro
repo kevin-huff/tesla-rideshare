@@ -5,17 +5,43 @@ const year = new Date().getFullYear();
 ---
 
 <footer data-component="Footer">
-  <MonoLabel>© {year} kevin · springfield mo</MonoLabel>
-  <MonoLabel>built by kevin</MonoLabel>
+  <p class="notice-line">
+    Passenger notice: this vehicle records audio and video. Some rides
+    livestream. <a href="#recording" class="notice-link">See the recording notice</a>.
+  </p>
+  <div class="meta">
+    <MonoLabel>© {year} kevin · springfield mo</MonoLabel>
+    <MonoLabel>built by kevin</MonoLabel>
+  </div>
 </footer>
 
 <style>
   footer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 14px;
     padding: 20px 22px 36px;
     max-width: var(--max-content);
     margin: 0 auto;
+  }
+
+  .notice-line {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--fg-mute);
+  }
+
+  .notice-link {
+    color: var(--fg-dim);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+  }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 </style>

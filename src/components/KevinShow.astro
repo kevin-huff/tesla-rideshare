@@ -32,6 +32,9 @@ const clips = [
     When I'm driving, I'm streaming. Streaming as dashcam for my safety and yours, streaming as proof of concept, and streaming as a way to track my earnings and efficiency.
     If you want your image or audio removed. Just ask. 
   </p>
+  <p class="notice-link">
+    <a href="#recording">recording notice ↓</a>
+  </p>
 
   <ChannelCard channel={channel} url={url} />
 
@@ -63,10 +66,23 @@ const clips = [
 
 <style>
   .lead {
-    margin: 0 0 18px;
+    margin: 0 0 8px;
     font-size: 15px;
     color: var(--fg-dim);
     line-height: 1.55;
+  }
+
+  .notice-link {
+    margin: 0 0 18px;
+    font-size: 13px;
+    color: var(--fg-mute);
+  }
+
+  .notice-link a {
+    color: var(--fg-mute);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
   }
 
   .clips-label {
