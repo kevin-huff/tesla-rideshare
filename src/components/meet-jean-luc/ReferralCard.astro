@@ -7,7 +7,8 @@ type Props = {
   label?: string;
 };
 
-const { href = "#", label = "https://ts.la/kevin396333" }: Props = Astro.props;
+const TESLA_REFERRAL_URL = "https://ts.la/kevin396333";
+const { href = TESLA_REFERRAL_URL, label = href }: Props = Astro.props;
 ---
 
 <aside class="referral">
