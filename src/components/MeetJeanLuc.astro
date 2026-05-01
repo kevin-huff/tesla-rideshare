@@ -8,6 +8,7 @@ import ReferralCard from "./meet-jean-luc/ReferralCard.astro";
 import exterior from "../assets/tesla-exterior.jpg";
 import interior from "../assets/tesla-interior.jpg";
 import screen from "../assets/tesla-screen.jpg";
+import platePhoto from "../assets/plate.jpg";
 ---
 
 <div class="meet-jean-luc" data-component="MeetJeanLuc">
@@ -41,7 +42,7 @@ import screen from "../assets/tesla-screen.jpg";
   <SpecGrid />
 
   <div class="plate">
-    <Plate />
+    <Plate photo={platePhoto} />
   </div>
 
   <FAQ />
