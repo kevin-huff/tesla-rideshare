@@ -17,13 +17,6 @@ const tiles: Tile[] = [
     trackId: "email-connect",
   },
   {
-    key: "twitch",
-    value: "/ZilchGnu",
-    href: "https://twitch.tv/ZilchGnu",
-    trackId: "twitch-connect",
-    external: true,
-  },
-  {
     key: "linkedin",
     value: "/in/mrhuff",
     href: "https://www.linkedin.com/in/mrhuff/",
@@ -77,7 +70,7 @@ const tiles: Tile[] = [
 
   .grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
@@ -85,7 +78,7 @@ const tiles: Tile[] = [
 
   @media (min-width: 720px) {
     .grid {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 
