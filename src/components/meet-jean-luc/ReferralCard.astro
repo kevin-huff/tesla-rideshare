@@ -7,7 +7,7 @@ type Props = {
   label?: string;
 };
 
-const { href = "#", label = "tesla.com/referral/kevin" }: Props = Astro.props;
+const { href = "#", label = "https://ts.la/kevin396333" }: Props = Astro.props;
 ---
 
 <aside class="referral">
@@ -16,7 +16,7 @@ const { href = "#", label = "tesla.com/referral/kevin" }: Props = Astro.props;
   </div>
   <p>
     Buying one? My referral link gets you a small perk and gets me a small one
-    too. No pressure.
+    too. No pressure. Maybe a little pressure. Click link to see current offer.
   </p>
   <UnderlinedLink href={href} external accent trackId="tesla-referral">
     {label}
