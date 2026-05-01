@@ -225,17 +225,29 @@ const containerStyle = [
 
     cycleBtn?.addEventListener("click", () => showSlide(i + 1));
 
+    // Page scroll lock for the modal. iOS Safari ignores
+    // body { overflow: hidden } for the document scroll, so we
+    // also have to fix the body in place at the current scroll
+    // position and restore it on close. Standard pattern.
+    let savedScroll = 0;
     expandBtn?.addEventListener("click", (e) => {
       e.stopPropagation();
-      // Lock background scroll while the modal is open. Native <dialog>
-      // disables interaction outside the modal but does not block scroll
-      // on iOS Safari and some Android browsers.
+      savedScroll = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${savedScroll}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
       document.body.style.overflow = "hidden";
       lightbox?.showModal();
     });
 
     lightbox?.addEventListener("close", () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
       document.body.style.overflow = "";
+      window.scrollTo(0, savedScroll);
     });
 
     lbClose?.addEventListener("click", () => lightbox?.close());
@@ -360,8 +372,16 @@ const containerStyle = [
   }
 
   /* Lightbox dialog — fullscreen modal so the popout image is
-     meaningfully larger than the inline gallery, not smaller. */
+     meaningfully larger than the inline gallery, not smaller.
+     position: fixed + inset: 0 overrides the UA default
+     position: absolute, which would position the dialog relative
+     to the .gallery (because .gallery is position: relative) and
+     push the 100vw/100vh dialog off-screen by the gallery's
+     offset. fixed pins the dialog to the viewport regardless of
+     where it sits in the DOM. */
   .lightbox {
+    position: fixed;
+    inset: 0;
     width: 100vw;
     height: 100vh;
     max-width: 100vw;
